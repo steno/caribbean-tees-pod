@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import { ShoppingCart, Check } from 'lucide-react'
 import { useCartStore } from '@/store/cart-store'
@@ -27,13 +27,68 @@ interface ProductCardProps {
   product: Product
 }
 
+// Parse variant title like "White / XL" or "Bay / L" into color and size
+function parseVariantTitle(title: string): { color: string; size: string } {
+  const parts = title.split('/').map(p => p.trim())
+  return {
+    color: parts[0] || '',
+    size: parts[1] || parts[0] || '' // If no second part, use first part as size
+  }
+}
+
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, openCart } = useCartStore()
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
-    product.variants[0] || null
-  )
+  
+  // Extract unique colors and sizes
+  const { colors, sizes, variantMap } = useMemo(() => {
+    const colorSet = new Set<string>()
+    const sizeSet = new Set<string>()
+    const map = new Map<string, ProductVariant>()
+    
+    product.variants.forEach(variant => {
+      if (!variant.is_available) return
+      
+      const { color, size } = parseVariantTitle(variant.title)
+      colorSet.add(color)
+      sizeSet.add(size)
+      map.set(`${color}|${size}`, variant)
+    })
+    
+    // Sort sizes by common order
+    const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']
+    const sortedSizes = Array.from(sizeSet).sort((a, b) => {
+      const aIndex = sizeOrder.indexOf(a)
+      const bIndex = sizeOrder.indexOf(b)
+      if (aIndex === -1 && bIndex === -1) return a.localeCompare(b)
+      if (aIndex === -1) return 1
+      if (bIndex === -1) return -1
+      return aIndex - bIndex
+    })
+    
+    return {
+      colors: Array.from(colorSet).sort(),
+      sizes: sortedSizes,
+      variantMap: map
+    }
+  }, [product.variants])
+  
+  const [selectedColor, setSelectedColor] = useState<string>(colors[0] || '')
+  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || '')
   const [isAdding, setIsAdding] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  
+  // Get the selected variant
+  const selectedVariant = variantMap.get(`${selectedColor}|${selectedSize}`)
+  
+  // Check which sizes are available for current color
+  const availableSizesForColor = useMemo(() => {
+    return sizes.filter(size => variantMap.has(`${selectedColor}|${size}`))
+  }, [selectedColor, sizes, variantMap])
+  
+  // Check which colors are available for current size
+  const availableColorsForSize = useMemo(() => {
+    return colors.filter(color => variantMap.has(`${color}|${selectedSize}`))
+  }, [selectedSize, colors, variantMap])
 
   const handleAddToCart = () => {
     if (!selectedVariant) return
@@ -81,7 +136,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Product Info */}
       <div className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
           {product.title}
         </h3>
 
@@ -91,45 +146,108 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
         )}
 
-        {/* Variant Selection */}
+        {/* Color Selection */}
+        {colors.length > 1 && (
+          <div className="mb-4">
+            <label className="block text-xs font-medium text-gray-700 mb-2">
+              Color: <span className="font-semibold text-gray-900">{selectedColor}</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {colors.map((color) => {
+                const isAvailable = availableColorsForSize.includes(color)
+                const isSelected = selectedColor === color
+                
+                return (
+                  <button
+                    key={color}
+                    onClick={() => {
+                      setSelectedColor(color)
+                      // Auto-select first available size for new color
+                      const availableSizes = sizes.filter(s => variantMap.has(`${color}|${s}`))
+                      if (!availableSizes.includes(selectedSize) && availableSizes.length > 0) {
+                        setSelectedSize(availableSizes[0])
+                      }
+                    }}
+                    disabled={!isAvailable}
+                    className={`
+                      px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all min-w-[80px]
+                      ${
+                        isSelected
+                          ? 'border-ocean-600 bg-ocean-50 text-ocean-900 ring-2 ring-ocean-600 ring-offset-1'
+                          : isAvailable
+                          ? 'border-sand-200 bg-white text-gray-700 hover:border-ocean-400 hover:bg-sand-50'
+                          : 'border-sand-200 bg-gray-50 text-gray-400 cursor-not-allowed opacity-50'
+                      }
+                    `}
+                    title={isAvailable ? color : `${color} (unavailable in size ${selectedSize})`}
+                  >
+                    {color}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Size Selection */}
         <div className="mb-4">
           <label className="block text-xs font-medium text-gray-700 mb-2">
-            Select Size
+            Size: <span className="font-semibold text-gray-900">{selectedSize}</span>
           </label>
           <div className="flex flex-wrap gap-2">
-            {product.variants.map((variant) => (
-              <button
-                key={variant.id}
-                onClick={() => setSelectedVariant(variant)}
-                disabled={!variant.is_available}
-                className={`
-                  px-3 py-1.5 text-sm font-medium rounded-md transition-all
-                  ${
-                    selectedVariant?.id === variant.id
-                      ? 'bg-ocean-600 text-white ring-2 ring-ocean-600 ring-offset-2'
-                      : variant.is_available
-                      ? 'bg-sand-100 text-gray-700 hover:bg-sand-200'
-                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  }
-                `}
-              >
-                {variant.title}
-              </button>
-            ))}
+            {sizes.map((size) => {
+              const isAvailable = availableSizesForColor.includes(size)
+              const isSelected = selectedSize === size
+              
+              return (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  disabled={!isAvailable}
+                  className={`
+                    px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all min-w-[60px]
+                    ${
+                      isSelected
+                        ? 'border-coral-500 bg-coral-50 text-coral-900 ring-2 ring-coral-500 ring-offset-1'
+                        : isAvailable
+                        ? 'border-sand-200 bg-white text-gray-700 hover:border-coral-400 hover:bg-coral-50'
+                        : 'border-sand-200 bg-gray-50 text-gray-400 cursor-not-allowed opacity-50 line-through'
+                    }
+                  `}
+                  title={isAvailable ? `Size ${size}` : `Size ${size} (unavailable in ${selectedColor})`}
+                >
+                  {size}
+                </button>
+              )
+            })}
           </div>
         </div>
 
+        {/* Availability Notice */}
+        {!selectedVariant && (
+          <p className="text-xs text-amber-600 mb-3 bg-amber-50 px-3 py-2 rounded-md">
+            ⚠️ This combination is not available. Please select a different color or size.
+          </p>
+        )}
+
         {/* Price and Add to Cart */}
-        <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-ocean-700">
-            {selectedVariant ? formatPrice(selectedVariant.price) : '—'}
-          </span>
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-sand-200">
+          <div>
+            <span className="text-2xl font-bold text-ocean-700">
+              {selectedVariant ? formatPrice(selectedVariant.price) : '—'}
+            </span>
+            {selectedVariant && (
+              <p className="text-xs text-gray-500 mt-1">
+                {selectedVariant.title}
+              </p>
+            )}
+          </div>
 
           <button
             onClick={handleAddToCart}
             disabled={!selectedVariant || isAdding}
             className={`
-              px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2
+              px-5 py-3 rounded-lg font-semibold transition-all flex items-center gap-2
               ${
                 showSuccess
                   ? 'bg-green-500 text-white'
@@ -155,4 +273,3 @@ export function ProductCard({ product }: ProductCardProps) {
     </div>
   )
 }
-

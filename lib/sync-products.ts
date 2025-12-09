@@ -8,14 +8,15 @@
  * This ensures your site always has up-to-date pricing, images, and availability.
  */
 
-import { getAdminDb } from './firebase-admin'
-import { printifyService } from './printify-service'
-
-// Load environment variables
+// Load environment variables FIRST before any imports
 import * as dotenv from 'dotenv'
 import * as path from 'path'
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
+
+// Now import other modules after env vars are loaded
+import { getAdminDb } from './firebase-admin'
+import { printifyService } from './printify-service'
 
 if (!process.env.PRINTIFY_API_TOKEN || !process.env.PRINTIFY_SHOP_ID) {
   console.error('❌ Missing Printify credentials in environment variables')

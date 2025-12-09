@@ -5,13 +5,21 @@ import {
 } from '@/types/printify'
 
 const PRINTIFY_API_BASE = 'https://api.printify.com/v1'
-const PRINTIFY_API_TOKEN = process.env.PRINTIFY_API_TOKEN!
-const PRINTIFY_SHOP_ID = process.env.PRINTIFY_SHOP_ID!
 
 class PrintifyService {
-  private headers = {
-    'Authorization': `Bearer ${PRINTIFY_API_TOKEN}`,
-    'Content-Type': 'application/json',
+  private get apiToken() {
+    return process.env.PRINTIFY_API_TOKEN!
+  }
+  
+  private get shopId() {
+    return process.env.PRINTIFY_SHOP_ID!
+  }
+
+  private get headers() {
+    return {
+      'Authorization': `Bearer ${this.apiToken}`,
+      'Content-Type': 'application/json',
+    }
   }
 
   /**
@@ -20,7 +28,7 @@ class PrintifyService {
   async getProducts(): Promise<PrintifyProduct[]> {
     try {
       const response = await fetch(
-        `${PRINTIFY_API_BASE}/shops/${PRINTIFY_SHOP_ID}/products.json`,
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/products.json`,
         {
           method: 'GET',
           headers: this.headers,
@@ -46,7 +54,7 @@ class PrintifyService {
   async getProduct(productId: string): Promise<PrintifyProduct> {
     try {
       const response = await fetch(
-        `${PRINTIFY_API_BASE}/shops/${PRINTIFY_SHOP_ID}/products/${productId}.json`,
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/products/${productId}.json`,
         {
           method: 'GET',
           headers: this.headers,
@@ -74,7 +82,7 @@ class PrintifyService {
       console.log('Submitting order to Printify:', JSON.stringify(orderData, null, 2))
 
       const response = await fetch(
-        `${PRINTIFY_API_BASE}/shops/${PRINTIFY_SHOP_ID}/orders.json`,
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/orders.json`,
         {
           method: 'POST',
           headers: this.headers,
@@ -103,7 +111,7 @@ class PrintifyService {
   async getShippingMethods(country: string = 'US'): Promise<any[]> {
     try {
       const response = await fetch(
-        `${PRINTIFY_API_BASE}/shops/${PRINTIFY_SHOP_ID}/shipping.json?country=${country}`,
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/shipping.json?country=${country}`,
         {
           method: 'GET',
           headers: this.headers,
@@ -130,7 +138,7 @@ class PrintifyService {
   ): Promise<number> {
     try {
       const response = await fetch(
-        `${PRINTIFY_API_BASE}/shops/${PRINTIFY_SHOP_ID}/orders/shipping.json`,
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/orders/shipping.json`,
         {
           method: 'POST',
           headers: this.headers,
@@ -161,7 +169,7 @@ class PrintifyService {
   async getOrder(orderId: string): Promise<PrintifyOrderResponse> {
     try {
       const response = await fetch(
-        `${PRINTIFY_API_BASE}/shops/${PRINTIFY_SHOP_ID}/orders/${orderId}.json`,
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/orders/${orderId}.json`,
         {
           method: 'GET',
           headers: this.headers,
@@ -185,7 +193,7 @@ class PrintifyService {
   async sendToProduction(orderId: string): Promise<void> {
     try {
       const response = await fetch(
-        `${PRINTIFY_API_BASE}/shops/${PRINTIFY_SHOP_ID}/orders/${orderId}/send_to_production.json`,
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/orders/${orderId}/send_to_production.json`,
         {
           method: 'POST',
           headers: this.headers,
