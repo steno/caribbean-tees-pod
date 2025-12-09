@@ -7,6 +7,7 @@ interface ProductVariant {
   title: string
   price: number
   is_available: boolean
+  image_url?: string
 }
 
 interface Product {

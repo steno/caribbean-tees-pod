@@ -74,7 +74,7 @@ async function syncProducts() {
 
         console.log(`   ✓ Product synced: ${printifyProduct.id}`)
 
-        // Sync variants as subcollection
+        // Sync variants as subcollection with images
         const variantsToSync = printifyProduct.variants
           .filter(v => v.is_enabled && v.is_available)
 
@@ -82,6 +82,11 @@ async function syncProducts() {
           const batch = db.batch()
           
           for (const variant of variantsToSync) {
+            // Find the image for this variant
+            const variantImage = printifyProduct.images.find(img => 
+              img.variant_ids && img.variant_ids.includes(variant.id)
+            )
+            
             const variantRef = productRef.collection('variants').doc(variant.id.toString())
             batch.set(variantRef, {
               printify_variant_id: variant.id,
@@ -89,12 +94,13 @@ async function syncProducts() {
               price: Math.round(variant.price * 100), // Convert to cents
               is_available: variant.is_available,
               sku: variant.sku || '',
+              image_url: variantImage?.src || mainImageUrl, // Use variant-specific image or fall back to main
               updated_at: new Date().toISOString(),
             }, { merge: true })
           }
 
           await batch.commit()
-          console.log(`   ✓ Synced ${variantsToSync.length} variants`)
+          console.log(`   ✓ Synced ${variantsToSync.length} variants with images`)
         }
 
         synced++
