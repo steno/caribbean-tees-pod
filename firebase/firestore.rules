@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Products collection - Read-only for public
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if false; // Only via admin SDK from sync script
+      
+      // Product variants subcollection
+      match /variants/{variantId} {
+        allow read: if true;
+        allow write: if false; // Only via admin SDK
+      }
+    }
+    
+    // Orders collection - No public access
+    match /orders/{orderId} {
+      allow read: if false;
+      allow write: if false; // Only via admin SDK from webhook
+    }
+    
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

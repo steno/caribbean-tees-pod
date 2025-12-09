@@ -1,7 +1,7 @@
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { supabase } from '@/lib/supabase'
+import { getAdminDb } from '@/lib/firebase-admin'
 import { printifyService } from '@/lib/printify-service'
 import { PrintifyOrderRequest } from '@/types/printify'
 
@@ -18,7 +18,7 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
  * Flow:
  * 1. Verify Stripe webhook signature
  * 2. Extract customer and order details
- * 3. Save order to database
+ * 3. Save order to Firestore
  * 4. Format order for Printify API
  * 5. Submit to Printify for printing and shipping
  */
@@ -76,34 +76,32 @@ export async function POST(req: Request) {
         })
       }
 
-      // Save order to database
-      const { data: order, error: dbError } = await supabase
-        .from('orders')
-        .insert({
-          stripe_session_id: session.id,
-          stripe_payment_intent_id: session.payment_intent as string,
-          customer_email: email,
-          customer_name: name || '',
-          shipping_address: {
-            line1: address.line1,
-            line2: address.line2,
-            city: address.city,
-            state: address.state,
-            postal_code: address.postal_code,
-            country: address.country,
-          },
-          total_amount: session.amount_total || 0,
-          status: 'paid',
-          line_items: cartItems,
-        })
-        .select()
-        .single()
+      // Get Firestore database
+      const db = getAdminDb()
 
-      if (dbError) {
-        throw dbError
-      }
+      // Save order to Firestore
+      const orderRef = db.collection('orders').doc()
+      await orderRef.set({
+        stripe_session_id: session.id,
+        stripe_payment_intent_id: session.payment_intent as string,
+        customer_email: email,
+        customer_name: name || '',
+        shipping_address: {
+          line1: address.line1,
+          line2: address.line2,
+          city: address.city,
+          state: address.state,
+          postal_code: address.postal_code,
+          country: address.country,
+        },
+        total_amount: session.amount_total || 0,
+        status: 'paid',
+        line_items: cartItems,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
 
-      console.log('✅ Order saved to database:', order.id)
+      console.log('✅ Order saved to Firestore:', orderRef.id)
 
       // ==========================================
       // CRITICAL: Submit order to Printify
@@ -116,7 +114,7 @@ export async function POST(req: Request) {
 
       // Build Printify order payload
       const printifyOrder: PrintifyOrderRequest = {
-        external_id: order.id, // Use our order ID for tracking
+        external_id: orderRef.id, // Use our Firestore document ID for tracking
         label: `Order #${session.id.slice(-8)}`,
         line_items: cartItems.map(item => ({
           product_id: item.printify_product_id,
@@ -143,27 +141,21 @@ export async function POST(req: Request) {
       const printifyResponse = await printifyService.createOrder(printifyOrder)
 
       // Update order with Printify ID
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({
-          printify_order_id: printifyResponse.id,
-          status: 'submitted_to_printify',
-        })
-        .eq('id', order.id)
-
-      if (updateError) {
-        console.error('Failed to update order with Printify ID:', updateError)
-      }
+      await orderRef.update({
+        printify_order_id: printifyResponse.id,
+        status: 'submitted_to_printify',
+        updated_at: new Date().toISOString(),
+      })
 
       console.log('🎉 ORDER AUTOMATION COMPLETE!')
       console.log('   • Stripe Session:', session.id)
-      console.log('   • Database Order:', order.id)
+      console.log('   • Firestore Order:', orderRef.id)
       console.log('   • Printify Order:', printifyResponse.id)
       console.log('   • Customer will receive shipping notification from Printify')
 
       return NextResponse.json({ 
         received: true, 
-        order_id: order.id,
+        order_id: orderRef.id,
         printify_order_id: printifyResponse.id 
       })
 
@@ -182,4 +174,3 @@ export async function POST(req: Request) {
   // For other event types
   return NextResponse.json({ received: true })
 }
-

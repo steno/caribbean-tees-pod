@@ -1,16 +1,15 @@
 #!/usr/bin/env tsx
 /**
- * Product Sync Script
+ * Product Sync Script - Firebase Version
  * 
- * This script fetches all products from Printify and syncs them to your Supabase database.
+ * This script fetches all products from Printify and syncs them to your Firebase Firestore.
  * Run with: npm run sync-products
  * 
  * This ensures your site always has up-to-date pricing, images, and availability.
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { getAdminDb } from './firebase-admin'
 import { printifyService } from './printify-service'
-import { Database } from '@/types/database'
 
 // Load environment variables
 import * as dotenv from 'dotenv'
@@ -18,25 +17,22 @@ import * as path from 'path'
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('❌ Missing Supabase credentials in environment variables')
-  process.exit(1)
-}
-
 if (!process.env.PRINTIFY_API_TOKEN || !process.env.PRINTIFY_SHOP_ID) {
   console.error('❌ Missing Printify credentials in environment variables')
   process.exit(1)
 }
 
-const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey)
+if (!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+  console.error('❌ Missing Firebase credentials in environment variables')
+  process.exit(1)
+}
 
 async function syncProducts() {
-  console.log('🚀 Starting product sync from Printify...\n')
+  console.log('🚀 Starting product sync from Printify to Firebase...\n')
 
   try {
+    const db = getAdminDb()
+    
     // Fetch all products from Printify
     console.log('📦 Fetching products from Printify API...')
     const printifyProducts = await printifyService.getProducts()
@@ -53,48 +49,50 @@ async function syncProducts() {
         const defaultImage = printifyProduct.images.find(img => img.is_default)
         const mainImageUrl = defaultImage?.src || printifyProduct.images[0]?.src || null
 
-        // Upsert product
-        const { data: product, error: productError } = await supabase
-          .from('products')
-          .upsert({
-            printify_product_id: printifyProduct.id,
-            title: printifyProduct.title,
-            description: printifyProduct.description,
-            main_image_url: mainImageUrl,
-          }, {
-            onConflict: 'printify_product_id',
-          })
-          .select()
-          .single()
-
-        if (productError) {
-          throw productError
+        // Prepare product data
+        const productData = {
+          printify_product_id: printifyProduct.id,
+          title: printifyProduct.title,
+          description: printifyProduct.description || '',
+          main_image_url: mainImageUrl,
+          updated_at: new Date().toISOString(),
         }
 
-        console.log(`   ✓ Product synced: ${product.id}`)
+        // Upsert product using printify_product_id as document ID
+        const productRef = db.collection('products').doc(printifyProduct.id)
+        const productDoc = await productRef.get()
+        
+        if (!productDoc.exists) {
+          await productRef.set({
+            ...productData,
+            created_at: new Date().toISOString(),
+          })
+        } else {
+          await productRef.update(productData)
+        }
 
-        // Sync variants
+        console.log(`   ✓ Product synced: ${printifyProduct.id}`)
+
+        // Sync variants as subcollection
         const variantsToSync = printifyProduct.variants
           .filter(v => v.is_enabled && v.is_available)
-          .map(variant => ({
-            product_id: product.id,
-            printify_variant_id: variant.id,
-            title: variant.title,
-            price: Math.round(variant.price * 100), // Convert to cents
-            is_available: variant.is_available,
-          }))
 
         if (variantsToSync.length > 0) {
-          const { error: variantsError } = await supabase
-            .from('product_variants')
-            .upsert(variantsToSync, {
-              onConflict: 'product_id,printify_variant_id',
-            })
-
-          if (variantsError) {
-            throw variantsError
+          const batch = db.batch()
+          
+          for (const variant of variantsToSync) {
+            const variantRef = productRef.collection('variants').doc(variant.id.toString())
+            batch.set(variantRef, {
+              printify_variant_id: variant.id,
+              title: variant.title,
+              price: Math.round(variant.price * 100), // Convert to cents
+              is_available: variant.is_available,
+              sku: variant.sku || '',
+              updated_at: new Date().toISOString(),
+            }, { merge: true })
           }
 
+          await batch.commit()
           console.log(`   ✓ Synced ${variantsToSync.length} variants`)
         }
 
@@ -122,4 +120,3 @@ async function syncProducts() {
 
 // Run the sync
 syncProducts()
-
