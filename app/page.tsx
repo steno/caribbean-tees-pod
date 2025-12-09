@@ -76,7 +76,7 @@ export default function HomePage() {
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Each design is carefully crafted and printed fresh when you order. 
-            Choose your favorite size and we'll handle the rest!
+            Choose your favorite size and we&apos;ll handle the rest!
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function HomePage() {
                 Unique Designs
               </h3>
               <p className="text-gray-600">
-                Original Costambar-inspired artwork you won't find anywhere else
+                Original Costambar-inspired artwork you won&apos;t find anywhere else
               </p>
             </div>
 

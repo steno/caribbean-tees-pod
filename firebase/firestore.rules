@@ -3,28 +3,27 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Products collection - Read-only for public
+    // Products collection - Public read access for website
     match /products/{productId} {
-      allow read: if true;
-      allow write: if false; // Only via admin SDK from sync script
+      allow read: if true;  // Anyone can read products
+      allow write: if false; // Only admin SDK can write
       
       // Product variants subcollection
       match /variants/{variantId} {
-        allow read: if true;
-        allow write: if false; // Only via admin SDK
+        allow read: if true;  // Anyone can read variants
+        allow write: if false; // Only admin SDK can write
       }
     }
     
-    // Orders collection - No public access
+    // Orders collection - No public access (admin SDK only)
     match /orders/{orderId} {
-      allow read: if false;
-      allow write: if false; // Only via admin SDK from webhook
+      allow read: if false;  // No public read access
+      allow write: if false; // Only admin SDK can write
     }
     
-    // Default deny all
+    // Default deny all other collections
     match /{document=**} {
       allow read, write: if false;
     }
   }
 }
-
