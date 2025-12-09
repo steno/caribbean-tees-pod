@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cart`,
       shipping_address_collection: {
-        allowed_countries: ['US', 'CA', 'GB', 'AU', 'NZ', 'JM', 'BB', 'TT', 'BS'], // Caribbean countries included!
+        allowed_countries: ['US', 'CA', 'GB', 'AU', 'NZ', 'JM', 'BB', 'TT', 'BS', 'DO'], // Dominican Republic & Caribbean countries included!
       },
       customer_email: undefined, // Let customer enter their email
       metadata: {

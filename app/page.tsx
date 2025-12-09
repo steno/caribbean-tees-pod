@@ -30,10 +30,10 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight">
-              Caribbean Tees
+              Costambar Tees
             </h1>
             <p className="text-xl md:text-2xl text-ocean-50 mb-8 max-w-3xl mx-auto">
-              Bring the island vibes to your wardrobe. Premium quality tees with beach and Caribbean themes, 
+              Bring the island vibes to your wardrobe. Premium quality tees with beach and Costambar themes, 
               printed on-demand and shipped worldwide.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -95,7 +95,7 @@ export default function HomePage() {
                 Unique Designs
               </h3>
               <p className="text-gray-600">
-                Original Caribbean-inspired artwork you won't find anywhere else
+                Original Costambar-inspired artwork you won't find anywhere else
               </p>
             </div>
 

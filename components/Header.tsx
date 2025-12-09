@@ -12,9 +12,9 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-ocean-600 to-coral-500 bg-clip-text text-transparent">
-              🌴 Caribbean Tees
-            </h1>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-ocean-600 to-coral-500 bg-clip-text text-transparent">
+            🌴 Costambar Tees
+          </h1>
           </div>
 
           {/* Cart Button */}

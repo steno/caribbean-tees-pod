@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Caribbean Beach Theme
+        // Costambar Beach Theme
         sand: {
           50: '#fdfcfb',
           100: '#faf8f5',
