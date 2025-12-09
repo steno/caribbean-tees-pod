@@ -1,19 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { ShoppingCart } from 'lucide-react'
 import { useCartStore } from '@/store/cart-store'
 
 export function Header() {
   const { getTotalItems, openCart } = useCartStore()
-  const [mounted, setMounted] = useState(false)
-
-  // Only render cart count on client to avoid hydration errors
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const totalItems = mounted ? getTotalItems() : 0
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-40">
@@ -33,9 +24,9 @@ export function Header() {
             aria-label="Shopping cart"
           >
             <ShoppingCart className="w-6 h-6" />
-            {totalItems > 0 && (
+            {getTotalItems() > 0 && (
               <span className="absolute -top-1 -right-1 bg-coral-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                {totalItems}
+                {getTotalItems()}
               </span>
             )}
           </button>
