@@ -17,10 +17,11 @@ export async function POST(req: Request) {
     }
 
     // Format line items for Stripe
+    // Note: Stripe processes in USD (required by Printify), but prices are displayed in DOP on the frontend
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cartItems.map(
       (item: any) => ({
         price_data: {
-          currency: 'usd',
+          currency: 'usd', // Printify requires USD
           product_data: {
             name: item.product_title,
             description: item.variant_title,
