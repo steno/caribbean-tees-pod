@@ -24,7 +24,7 @@ export default function SuccessPage() {
           </p>
           <ul className="text-sm text-ocean-800 mt-2 space-y-1 text-left">
             <li>✓ Your order is being printed</li>
-            <li>✓ You&apos;ll receive a shipping notification via email</li>
+            <li>✓ You'll receive a shipping notification via email</li>
             <li>✓ Track your package all the way to your door</li>
           </ul>
         </div>

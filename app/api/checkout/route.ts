@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2024-11-20.acacia',
 })
 
 export async function POST(req: Request) {
@@ -17,11 +17,10 @@ export async function POST(req: Request) {
     }
 
     // Format line items for Stripe
-    // Note: Stripe processes in USD (required by Printify), but prices are displayed in DOP on the frontend
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cartItems.map(
       (item: any) => ({
         price_data: {
-          currency: 'usd', // Printify requires USD
+          currency: 'usd',
           product_data: {
             name: item.product_title,
             description: item.variant_title,

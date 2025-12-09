@@ -161,12 +161,8 @@ export function CartSlideOver() {
                 {formatPrice(getTotalPrice())}
               </span>
             </div>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-gray-500 mb-4">
               Shipping and taxes calculated at checkout
-            </p>
-            <p className="text-xs text-ocean-600 mb-4 flex items-center gap-1">
-              <span>💱</span>
-              <span>Prices shown in Dominican Pesos (RD$)</span>
             </p>
             <button
               onClick={handleCheckout}
