@@ -32,6 +32,7 @@
     "tsx": "^4.7.0",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.2.0",
-    "@netlify/plugin-nextjs": "^5.0.0"
+    "@netlify/plugin-nextjs": "^5.0.0",
+    "dotenv": "^16.4.5"
   }
 }
