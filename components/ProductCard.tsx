@@ -13,6 +13,17 @@ interface ProductVariant {
   price: number
   is_available: boolean
   image_url?: string
+  option_ids?: number[] // Option IDs from Printify
+}
+
+interface PrintifyOption {
+  name: string
+  type: string
+  values: Array<{
+    id: number
+    title: string
+    colors?: string[]
+  }>
 }
 
 interface Product {
@@ -22,45 +33,88 @@ interface Product {
   description: string | null
   main_image_url: string | null
   variants: ProductVariant[]
+  options?: PrintifyOption[] // Options from Printify
 }
 
 interface ProductCardProps {
   product: Product
 }
 
-// Parse variant title like "White / XL" or "Bay / L" into color and size
-function parseVariantTitle(title: string): { color: string; size: string } {
-  const parts = title.split('/').map(p => p.trim())
-  return {
-    color: parts[0] || '',
-    size: parts[1] || parts[0] || '' // If no second part, use first part as size
-  }
-}
-
-// Colors to exclude from all products
-const EXCLUDED_COLORS = ['Blue Jean', 'Chili', 'Ice Blue', 'Ivory', 'Pepper', 'Watermelon', 'Khaki', 'Berry']
-
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, openCart } = useCartStore()
   
-  // Extract unique colors and sizes
+  // Extract unique colors and sizes using Printify options
   const { colors, sizes, variantMap } = useMemo(() => {
     const colorSet = new Set<string>()
     const sizeSet = new Set<string>()
     const map = new Map<string, ProductVariant>()
     
-    product.variants.forEach(variant => {
-      if (!variant.is_available) return
+    // If we have options from Printify, use them
+    if (product.options && product.options.length > 0) {
+      // Find color and size options
+      const colorOption = product.options.find(opt => 
+        opt.name.toLowerCase().includes('color') || 
+        opt.name.toLowerCase().includes('colour')
+      )
+      const sizeOption = product.options.find(opt => 
+        opt.name.toLowerCase().includes('size')
+      )
       
-      const { color, size } = parseVariantTitle(variant.title)
+      // Create maps from option ID to value title
+      const colorIdMap = new Map<number, string>()
+      const sizeIdMap = new Map<number, string>()
       
-      // Skip excluded colors
-      if (EXCLUDED_COLORS.includes(color)) return
+      if (colorOption) {
+        colorOption.values.forEach(val => {
+          colorIdMap.set(val.id, val.title)
+        })
+      }
       
-      colorSet.add(color)
-      sizeSet.add(size)
-      map.set(`${color}|${size}`, variant)
-    })
+      if (sizeOption) {
+        sizeOption.values.forEach(val => {
+          sizeIdMap.set(val.id, val.title)
+        })
+      }
+      
+      // Extract colors and sizes from variants using option IDs
+      product.variants.forEach(variant => {
+        if (!variant.is_available || !variant.option_ids) return
+        
+        let color = ''
+        let size = ''
+        
+        // Map option IDs to color and size
+        variant.option_ids.forEach(optionId => {
+          if (colorIdMap.has(optionId)) {
+            color = colorIdMap.get(optionId)!
+          }
+          if (sizeIdMap.has(optionId)) {
+            size = sizeIdMap.get(optionId)!
+          }
+        })
+        
+        if (color && size) {
+          colorSet.add(color)
+          sizeSet.add(size)
+          map.set(`${color}|${size}`, variant)
+        }
+      })
+    } else {
+      // Fallback to parsing title if options not available
+      product.variants.forEach(variant => {
+        if (!variant.is_available) return
+        
+        const parts = variant.title.split('/').map(p => p.trim())
+        const color = parts[0] || ''
+        const size = parts[1] || parts[0] || ''
+        
+        if (color && size) {
+          colorSet.add(color)
+          sizeSet.add(size)
+          map.set(`${color}|${size}`, variant)
+        }
+      })
+    }
     
     // Sort colors with White first, then alphabetically
     const sortedColors = Array.from(colorSet).sort((a, b) => {
@@ -85,7 +139,7 @@ export function ProductCard({ product }: ProductCardProps) {
       sizes: sortedSizes,
       variantMap: map
     }
-  }, [product.variants])
+  }, [product.variants, product.options])
   
   const [selectedColor, setSelectedColor] = useState<string>(colors[0] || '')
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || '')

@@ -1,5 +1,5 @@
 import { getAdminDb } from '@/lib/firebase-admin'
-import { ProductCard } from './ProductCard'
+import { ProductGridClient } from './ProductGridClient'
 
 interface ProductVariant {
   id: string
@@ -8,6 +8,7 @@ interface ProductVariant {
   price: number
   is_available: boolean
   image_url?: string
+  option_ids?: number[]
 }
 
 interface Product {
@@ -17,6 +18,17 @@ interface Product {
   description: string | null
   main_image_url: string | null
   variants: ProductVariant[]
+  tags?: string[] // Tags from Printify for filtering
+  visible?: boolean // Visibility status from Printify
+  options?: Array<{
+    name: string
+    type: string
+    values: Array<{
+      id: number
+      title: string
+      colors?: string[]
+    }>
+  }>
 }
 
 export async function ProductGrid() {
@@ -43,14 +55,22 @@ export async function ProductGrid() {
         ...variantDoc.data(),
       } as ProductVariant))
 
-      products.push({
-        id: doc.id,
-        printify_product_id: productData.printify_product_id,
-        title: productData.title,
-        description: productData.description || null,
-        main_image_url: productData.main_image_url || null,
-        variants: variants,
-      })
+      // Only include visible products (default to true for backwards compatibility)
+      const isVisible = productData.visible !== false
+      
+      if (isVisible) {
+        products.push({
+          id: doc.id,
+          printify_product_id: productData.printify_product_id,
+          title: productData.title,
+          description: productData.description || null,
+          main_image_url: productData.main_image_url || null,
+          variants: variants,
+          tags: productData.tags || [],
+          visible: productData.visible !== false,
+          options: productData.options || undefined,
+        })
+      }
     }
 
     if (products.length === 0) {
@@ -66,13 +86,7 @@ export async function ProductGrid() {
       )
     }
 
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    )
+    return <ProductGridClient products={products} />
   } catch (error) {
     console.error('Error fetching products:', error)
     return (
