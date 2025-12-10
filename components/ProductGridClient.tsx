@@ -45,14 +45,23 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
   const tags = (product.tags || []).map(tag => tag.toLowerCase())
   const title = (product.title || '').toLowerCase().trim()
   
+  // Check if product is unisex (in title or tags)
+  const isUnisex = title.includes('unisex') || 
+                   title.includes('(unisex)') ||
+                   tags.some(tag => tag.includes('unisex'))
+  
   if (filter === 'men') {
-    // PRIORITY: Check title first - if title clearly indicates men's, include it regardless of tags
+    // PRIORITY: If unisex, include it in men's filter
+    if (isUnisex) {
+      return true
+    }
+    
+    // Check title first - if title clearly indicates men's, include it
     const hasMenInTitle = title.startsWith("mens") || 
                           title.startsWith("men's") ||
                           title.startsWith("men ")
     
     if (hasMenInTitle) {
-      // Title clearly indicates men's product - include it even if it has women's tags (unisex)
       return true
     }
     
@@ -75,7 +84,6 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
              lowerTag === "men's"
     })
     
-    // Only exclude if it has women's tags AND no men's tags
     const hasWomenTag = tags.some(tag => {
       const lowerTag = tag.toLowerCase()
       return lowerTag.startsWith('women') || 
@@ -100,13 +108,17 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
   }
   
   if (filter === 'women') {
-    // PRIORITY: Check title first - if title clearly indicates women's, include it regardless of tags
+    // PRIORITY: If unisex, include it in women's filter
+    if (isUnisex) {
+      return true
+    }
+    
+    // Check title first - if title clearly indicates women's, include it
     const hasWomenInTitle = title.startsWith("womens") || 
                             title.startsWith("women's") ||
                             title.startsWith("women ")
     
     if (hasWomenInTitle) {
-      // Title clearly indicates women's product - include it even if it has men's tags (unisex)
       return true
     }
     
@@ -116,7 +128,7 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
                           title.startsWith("men ")
     
     if (hasMenInTitle) {
-      return false // Title clearly indicates men's product - exclude
+      return false // Title clearly indicates men's product - exclude (unless unisex, which we already checked)
     }
     
     // Title is ambiguous - check tags
@@ -129,7 +141,6 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
              lowerTag === "women's"
     })
     
-    // Only exclude if it has men's tags AND no women's tags
     const hasMenTag = tags.some(tag => {
       const lowerTag = tag.toLowerCase()
       return lowerTag.startsWith('men') || 

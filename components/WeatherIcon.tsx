@@ -16,6 +16,7 @@ interface WeatherData {
   temp: number
   iconCode: string
   description: string
+  isNight?: boolean
 }
 
 export function WeatherIcon() {
@@ -67,13 +68,18 @@ export function WeatherIcon() {
   }
 
   const WeatherIconComponent = weather ? getWeatherIcon(weather.iconCode) : Sun
+  const isNight = weather?.isNight ?? false
 
   return (
     <button
       onClick={() => setShowTemp(!showTemp)}
-      className="flex items-center gap-1.5 text-white/90 hover:text-white transition-colors"
-      aria-label={weather ? `Weather in Costambar: ${weather.temp}°C, ${weather.description}` : 'Weather'}
-      title={weather ? `${weather.temp}°C - ${weather.description}` : 'Weather'}
+      className={`flex items-center gap-1.5 transition-colors ${
+        isNight 
+          ? 'text-blue-200/90 hover:text-blue-100' 
+          : 'text-white/90 hover:text-white'
+      }`}
+      aria-label={weather ? `Weather in Costambar: ${weather.temp}°C, ${weather.description}${isNight ? ' (Night)' : ''}` : 'Weather'}
+      title={weather ? `${weather.temp}°C - ${weather.description}${isNight ? ' (Night)' : ''}` : 'Weather'}
     >
       <WeatherIconComponent className="w-5 h-5" />
       {weather && showTemp && (

@@ -12,10 +12,15 @@ export async function GET() {
     
     if (!apiKey) {
       // Return default/fallback data if API key not configured
+      // Try to determine if it's night based on current time (rough estimate for Costambar timezone)
+      const currentHour = new Date().getUTCHours() - 4 // UTC-4 for Dominican Republic
+      const isNight = currentHour < 6 || currentHour >= 18
+      
       return NextResponse.json({
         temp: 28,
-        iconCode: '01d',
-        description: 'Sunny'
+        iconCode: isNight ? '01n' : '01d',
+        description: 'Sunny',
+        isNight: isNight
       })
     }
 
@@ -33,19 +38,31 @@ export async function GET() {
     
     // Get weather icon code from OpenWeatherMap
     const iconCode = data.weather[0].icon
+    
+    // Determine if it's nighttime based on sunrise/sunset times
+    const currentTime = Math.floor(Date.now() / 1000) // Current time in Unix timestamp
+    const sunrise = data.sys.sunrise
+    const sunset = data.sys.sunset
+    const isNight = currentTime < sunrise || currentTime > sunset
 
     return NextResponse.json({
       temp: Math.round(data.main.temp),
       iconCode: iconCode,
-      description: data.weather[0].description
+      description: data.weather[0].description,
+      isNight: isNight
     })
   } catch (error) {
     console.error('Weather fetch error:', error)
     // Return fallback data
+    // Try to determine if it's night based on current time (rough estimate for Costambar timezone)
+    const currentHour = new Date().getUTCHours() - 4 // UTC-4 for Dominican Republic
+    const isNight = currentHour < 6 || currentHour >= 18
+    
     return NextResponse.json({
       temp: 28,
-      iconCode: '01d',
-      description: 'Sunny'
+      iconCode: isNight ? '01n' : '01d',
+      description: 'Sunny',
+      isNight: isNight
     })
   }
 }

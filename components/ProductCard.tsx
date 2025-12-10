@@ -146,13 +146,14 @@ export function ProductCard({ product }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   
-  // Set random color after component mounts (client-side only) to avoid hydration errors
+  // Set initial color after component mounts (client-side only) to avoid hydration errors
+  // Prefer White, otherwise use first available color
   useEffect(() => {
-    const randomColor = colors[Math.floor(Math.random() * colors.length)] || colors[0]
-    if (randomColor) {
-      setSelectedColor(randomColor)
+    const initialColor = colors.find(color => color.toLowerCase() === 'white') || colors[0]
+    if (initialColor) {
+      setSelectedColor(initialColor)
       // Make sure the selected size is available for this color
-      const availableSizes = sizes.filter(s => variantMap.has(`${randomColor}|${s}`))
+      const availableSizes = sizes.filter(s => variantMap.has(`${initialColor}|${s}`))
       if (availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
         setSelectedSize(availableSizes[0])
       }

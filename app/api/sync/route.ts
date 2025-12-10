@@ -93,7 +93,7 @@ export async function POST(req: Request) {
             batch.set(variantRef, {
               printify_variant_id: variant.id,
               title: variant.title,
-              price: Math.round(variant.price * 100),
+              price: Math.round(variant.price), // Printify already returns price in cents
               is_available: variant.is_available,
               sku: variant.sku || '',
               image_url: variantImage?.src || mainImageUrl,
