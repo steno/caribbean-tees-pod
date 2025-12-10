@@ -17,7 +17,7 @@ export default function NotFound() {
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 pt-80 md:pt-96">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-12 max-w-md mx-auto">
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl shadow-2xl p-8 md:p-12 max-w-md mx-auto">
           <h1 className="text-6xl font-extrabold text-ocean-600 mb-4">
             404
           </h1>
