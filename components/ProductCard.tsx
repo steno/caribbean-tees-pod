@@ -62,6 +62,13 @@ export function ProductCard({ product }: ProductCardProps) {
       map.set(`${color}|${size}`, variant)
     })
     
+    // Sort colors with White first, then alphabetically
+    const sortedColors = Array.from(colorSet).sort((a, b) => {
+      if (a === 'White') return -1
+      if (b === 'White') return 1
+      return a.localeCompare(b)
+    })
+    
     // Sort sizes by common order
     const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']
     const sortedSizes = Array.from(sizeSet).sort((a, b) => {
@@ -74,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
     })
     
     return {
-      colors: Array.from(colorSet).sort(),
+      colors: sortedColors,
       sizes: sortedSizes,
       variantMap: map
     }
