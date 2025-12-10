@@ -16,7 +16,7 @@ export default function PrivacyPolicy() {
         <section>
           <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">1. Introduction</h2>
           <p>
-            Welcome to Costambar Tees ("we," "our," or "us"). We are committed to protecting your privacy and ensuring you have a positive experience on our website. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and make purchases.
+            Welcome to Costambar Tees (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We are committed to protecting your privacy and ensuring you have a positive experience on our website. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and make purchases.
           </p>
         </section>
 
@@ -94,7 +94,7 @@ export default function PrivacyPolicy() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">8. Children's Privacy</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">8. Children&apos;s Privacy</h2>
           <p>
             Our website is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.
           </p>
@@ -103,7 +103,7 @@ export default function PrivacyPolicy() {
         <section>
           <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">9. Changes to This Policy</h2>
           <p>
-            We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
+            We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the &quot;Last updated&quot; date.
           </p>
         </section>
 
