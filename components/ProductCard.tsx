@@ -162,15 +162,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Product Info */}
       <div className="p-4">
-        <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[2.5rem]">
+        <h3 className="text-base font-semibold text-gray-900 mb-3 line-clamp-2">
           {product.title}
         </h3>
-
-        {product.description && (
-          <p className="text-xs text-gray-600 mb-3 line-clamp-2">
-            {product.description}
-          </p>
-        )}
 
         {/* Color Selection */}
         {colors.length > 1 && (
