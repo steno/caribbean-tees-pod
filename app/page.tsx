@@ -1,7 +1,11 @@
+'use client'
+
 import { ProductGrid } from '@/components/ProductGrid'
-import { Waves, Palmtree, Ship } from 'lucide-react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
+import { useState } from 'react'
 
 export default function HomePage() {
+  const [isAboutOpen, setIsAboutOpen] = useState(false)
   return (
     <div className="min-h-screen">
       {/* Hero Section - Beach Theme */}
@@ -24,16 +28,39 @@ export default function HomePage() {
           <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-gradient-to-r from-ocean-600 via-ocean-500 to-coral-500 bg-clip-text mb-4">
             Costambar Tees
           </h1>
-          <p className="text-xl text-gray-700 mb-6 max-w-3xl mx-auto">
-            Bring the island vibes to your wardrobe
-          </p>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4 mt-8">
+          
+          {/* Expandable About Section for SEO */}
+          <div className="max-w-3xl mx-auto mb-8">
+            <button
+              onClick={() => setIsAboutOpen(!isAboutOpen)}
+              className="inline-flex items-center gap-2 text-ocean-600 hover:text-ocean-700 font-medium transition-colors"
+              aria-expanded={isAboutOpen}
+            >
+              <span>About Our Tees</span>
+              {isAboutOpen ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </button>
+            
+            {isAboutOpen && (
+              <div className="mt-4 text-gray-700 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                <p className="text-xl">
+                  Bring the island vibes to your wardrobe
+                </p>
+                <p className="text-base">
+                  Each design is carefully crafted and printed fresh when you order. 
+                  Premium quality tees with beach and Costambar themes, printed on-demand 
+                  and shipped worldwide. Choose your favorite size and we&apos;ll handle the rest!
+                </p>
+              </div>
+            )}
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Shop Our Collection
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Each design is carefully crafted and printed fresh when you order. 
-            Choose your favorite size and we&apos;ll handle the rest!
-          </p>
         </div>
 
         <ProductGrid />
