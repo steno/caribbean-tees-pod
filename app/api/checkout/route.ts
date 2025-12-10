@@ -47,9 +47,7 @@ export async function POST(req: Request) {
         allowed_countries: ['US', 'CA', 'GB', 'AU', 'NZ', 'JM', 'BB', 'TT', 'BS', 'DO'], // Dominican Republic & Caribbean countries included!
       },
       customer_email: undefined, // Let customer enter their email
-      metadata: {
-        cart_items: JSON.stringify(cartItems),
-      },
+      // Note: Removed metadata - will retrieve from line_items in webhook instead
     })
 
     return NextResponse.json({ sessionId: session.id, url: session.url })
