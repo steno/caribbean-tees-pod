@@ -12,7 +12,7 @@ export default function HomePage() {
         <div 
           className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat bg-[center_top] md:bg-[center_calc(50%-20px)]"
           style={{
-            backgroundImage: "url('/home-bg.png')",
+            backgroundImage: "url('/home-photo.jpg')",
           }}
         />
       </section>

@@ -4,11 +4,37 @@ import { useCartStore } from '@/store/cart-store'
 import { formatPrice } from '@/lib/utils'
 import { X, Minus, Plus, ShoppingBag, Loader2 } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export function CartSlideOver() {
   const { items, isOpen, closeCart, updateQuantity, removeItem, getTotalPrice } = useCartStore()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
+  const [shouldRender, setShouldRender] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      // Mount the component
+      setShouldRender(true)
+      // Trigger slide-in animation after a brief delay
+      const timer = setTimeout(() => {
+        setIsVisible(true)
+      }, 10)
+      return () => clearTimeout(timer)
+    } else if (shouldRender) {
+      // Trigger slide-out animation
+      setIsVisible(false)
+      // Unmount after animation completes
+      const timer = setTimeout(() => {
+        setShouldRender(false)
+      }, 300) // Match animation duration
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen, shouldRender])
+
+  const handleClose = () => {
+    closeCart()
+  }
 
   const handleCheckout = async () => {
     setIsCheckingOut(true)
@@ -39,18 +65,22 @@ export function CartSlideOver() {
     }
   }
 
-  if (!isOpen) return null
+  if (!shouldRender) return null
 
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity animate-in fade-in duration-200"
-        onClick={closeCart}
+        className={`fixed inset-0 bg-black z-40 transition-opacity duration-300 ${
+          isVisible ? 'opacity-50' : 'opacity-0'
+        }`}
+        onClick={handleClose}
       />
 
       {/* Slide-over panel */}
-      <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white/95 backdrop-blur-md shadow-xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+      <div className={`fixed inset-y-0 right-0 max-w-md w-full bg-white/95 backdrop-blur-md shadow-xl z-50 flex flex-col transition-transform duration-300 ease-in-out ${
+        isVisible ? 'translate-x-0' : 'translate-x-full'
+      }`}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-sand-200">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
@@ -58,7 +88,7 @@ export function CartSlideOver() {
             Your Cart
           </h2>
           <button
-            onClick={closeCart}
+            onClick={handleClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
             aria-label="Close cart"
           >
