@@ -135,8 +135,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
-      {/* Product Image - Updates based on selected color */}
-      <div className="relative aspect-[4/5] bg-sand-100 overflow-hidden">
+      {/* Product Image - Smaller and more compact */}
+      <div className="relative aspect-[4/3] bg-sand-100 overflow-hidden">
         {displayImage ? (
           <Image
             key={displayImage} // Force re-render on image change
@@ -162,9 +162,15 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Product Info */}
       <div className="p-4">
-        <h3 className="text-base font-semibold text-gray-900 mb-3 line-clamp-1">
+        <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[2.5rem]">
           {product.title}
         </h3>
+
+        {product.description && (
+          <p className="text-xs text-gray-600 mb-3 line-clamp-2">
+            {product.description}
+          </p>
+        )}
 
         {/* Color Selection */}
         {colors.length > 1 && (
@@ -193,7 +199,7 @@ export function ProductCard({ product }: ProductCardProps) {
                       px-2 py-1.5 text-xs font-medium rounded-lg border-2 transition-all min-w-[70px]
                       ${
                         isSelected
-                          ? 'border-ocean-600 bg-ocean-50 text-ocean-900 ring-2 ring-ocean-600 ring-offset-1'
+                          ? 'border-ocean-600 bg-ocean-50 text-ocean-900 ring-1 ring-ocean-600'
                           : isAvailable
                           ? 'border-sand-200 bg-white text-gray-700 hover:border-ocean-400 hover:bg-sand-50'
                           : 'border-sand-200 bg-gray-50 text-gray-400 cursor-not-allowed opacity-50'
@@ -225,10 +231,10 @@ export function ProductCard({ product }: ProductCardProps) {
                   onClick={() => setSelectedSize(size)}
                   disabled={!isAvailable}
                   className={`
-                    px-2.5 py-1.5 text-xs font-semibold rounded-lg border-2 transition-all min-w-[50px]
+                    px-2 py-1.5 text-xs font-semibold rounded-lg border-2 transition-all min-w-[50px]
                     ${
                       isSelected
-                        ? 'border-coral-500 bg-coral-50 text-coral-900 ring-2 ring-coral-500 ring-offset-1'
+                        ? 'border-coral-500 bg-coral-50 text-coral-900 ring-1 ring-coral-500'
                         : isAvailable
                         ? 'border-sand-200 bg-white text-gray-700 hover:border-coral-400 hover:bg-coral-50'
                         : 'border-sand-200 bg-gray-50 text-gray-400 cursor-not-allowed opacity-50 line-through'
@@ -246,23 +252,28 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Availability Notice */}
         {!selectedVariant && (
           <p className="text-xs text-amber-600 mb-2 bg-amber-50 px-2 py-1.5 rounded-md">
-            ⚠️ Not available. Select different options.
+            ⚠️ This combination is not available. Please select a different color or size.
           </p>
         )}
 
         {/* Price and Add to Cart */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-sand-200">
+        <div className="flex items-center justify-between mt-4 pt-3 border-t border-sand-200">
           <div>
             <span className="text-xl font-bold text-ocean-700">
               {selectedVariant ? formatPrice(selectedVariant.price) : '—'}
             </span>
+            {selectedVariant && (
+              <p className="text-xs text-gray-500 mt-0.5">
+                {selectedVariant.title}
+              </p>
+            )}
           </div>
 
           <button
             onClick={handleAddToCart}
             disabled={!selectedVariant || isAdding}
             className={`
-              px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm
+              px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-1.5 text-sm
               ${
                 showSuccess
                   ? 'bg-green-500 text-white'

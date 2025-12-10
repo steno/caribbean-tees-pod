@@ -17,8 +17,8 @@ export default function HomePage() {
 
       {/* Products Section - Scrolls over hero */}
       <section className="relative bg-white rounded-t-3xl -mt-20 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center mb-8">
           {/* Expandable About Section for SEO */}
           <ExpandableAbout />
         </div>
