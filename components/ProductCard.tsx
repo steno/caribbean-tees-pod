@@ -121,7 +121,7 @@ export function ProductCard({ product }: ProductCardProps) {
       variant_title: selectedVariant.title,
       price: selectedVariant.price,
       quantity: 1,
-      image_url: product.main_image_url || undefined,
+      image_url: selectedVariant.image_url || product.main_image_url || undefined,
     })
 
     // Show success animation
