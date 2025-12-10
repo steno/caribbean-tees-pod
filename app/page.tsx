@@ -27,10 +27,6 @@ export default function HomePage() {
           
           {/* Expandable About Section for SEO */}
           <ExpandableAbout />
-
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Shop Our Collection
-          </h2>
         </div>
 
         <ProductGrid />
