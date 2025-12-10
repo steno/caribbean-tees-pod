@@ -15,12 +15,12 @@ export function Header() {
   const cartCount = isClient ? getTotalItems() : 0
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-40">
+    <header className="bg-gradient-to-br from-ocean-400 via-ocean-500 to-ocean-600 shadow-lg sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-ocean-600 to-coral-500 bg-clip-text text-transparent">
+          <h1 className="text-2xl font-bold text-white">
             🌴 Costambar Tees
           </h1>
           </div>
@@ -28,7 +28,7 @@ export function Header() {
           {/* Cart Button */}
           <button
             onClick={openCart}
-            className="relative p-2 text-gray-700 hover:text-ocean-600 transition-colors"
+            className="relative p-2 text-white hover:text-ocean-100 transition-colors"
             aria-label="Shopping cart"
           >
             <ShoppingCart className="w-6 h-6" />
