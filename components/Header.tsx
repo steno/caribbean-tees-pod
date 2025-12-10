@@ -26,9 +26,11 @@ export function Header() {
             <Image 
               src="/CT-Logo-white.png" 
               alt="Costambar Tees Logo" 
-              width={40} 
-              height={32}
+              width={629} 
+              height={451}
               className="h-8 w-auto"
+              unoptimized
+              priority
             />
             <h1 className="text-xl md:text-2xl font-bold text-white">
               Costambar Tees
