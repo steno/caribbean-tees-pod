@@ -169,10 +169,10 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Color Selection */}
         {colors.length > 1 && (
           <div className="mb-3">
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Color: <span className="font-semibold text-gray-900">{selectedColor}</span>
             </label>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-2">
               {colors.map((color) => {
                 const isAvailable = availableColorsForSize.includes(color)
                 const isSelected = selectedColor === color
@@ -190,7 +190,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     }}
                     disabled={!isAvailable}
                     className={`
-                      px-2 py-1.5 text-xs font-medium rounded-lg border-2 transition-all min-w-[70px]
+                      px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all min-w-[80px]
                       ${
                         isSelected
                           ? 'border-ocean-600 bg-ocean-50 text-ocean-900 ring-1 ring-ocean-600'
@@ -211,10 +211,10 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Size Selection */}
         <div className="mb-3">
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Size: <span className="font-semibold text-gray-900">{selectedSize}</span>
           </label>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {sizes.map((size) => {
               const isAvailable = availableSizesForColor.includes(size)
               const isSelected = selectedSize === size
@@ -225,7 +225,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   onClick={() => setSelectedSize(size)}
                   disabled={!isAvailable}
                   className={`
-                    px-2 py-1.5 text-xs font-semibold rounded-lg border-2 transition-all min-w-[50px]
+                    px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all min-w-[60px]
                     ${
                       isSelected
                         ? 'border-coral-500 bg-coral-50 text-coral-900 ring-1 ring-coral-500'
