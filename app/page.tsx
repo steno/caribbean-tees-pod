@@ -8,12 +8,12 @@ export default function HomePage() {
       <AutoScroll />
       {/* Hero Section - Sticky Background */}
       <section className="sticky top-0 overflow-hidden -z-10" style={{ height: 'calc(70vh - 100px)' }}>
-        {/* Background GIF - Fixed in place, moved down 100px */}
+        {/* Background GIF - Fixed in place, moved down 60px */}
         <div 
           className="absolute inset-0 bg-cover bg-no-repeat"
           style={{
             backgroundImage: "url('/home-bg.gif')",
-            backgroundPosition: 'center calc(50% + 100px)',
+            backgroundPosition: 'center calc(50% + 60px)',
           }}
         />
       </section>
