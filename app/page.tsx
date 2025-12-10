@@ -1,9 +1,11 @@
 import { ProductGrid } from '@/components/ProductGrid'
 import { ExpandableAbout } from '@/components/ExpandableAbout'
+import { AutoScroll } from '@/components/AutoScroll'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen relative">
+      <AutoScroll />
       {/* Hero Section - Sticky Background */}
       <section className="sticky top-0 overflow-hidden h-[70vh] md:h-[80vh] -z-10">
         {/* Background GIF - Fixed in place */}
