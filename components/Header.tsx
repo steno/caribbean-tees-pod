@@ -15,7 +15,7 @@ export function Header() {
   const cartCount = isClient ? getTotalItems() : 0
 
   return (
-    <header className="bg-gradient-to-br from-ocean-400 via-ocean-500 to-ocean-600 shadow-lg sticky top-0 z-40">
+    <header className="bg-gradient-to-br from-ocean-400/70 via-ocean-500/70 to-ocean-600/70 backdrop-blur-md shadow-lg sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo - Main H1 for SEO */}

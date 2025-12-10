@@ -31,7 +31,7 @@ export default function RootLayout({
         <footer className="bg-ocean-900 text-white py-12 mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-ocean-200">
-              © {new Date().getFullYear()} Costambar Tees. Made with 🌴 for the islands.
+              © {new Date().getFullYear()} Costambar Tees. Made with 💙 for Costambar.
             </p>
           </div>
         </footer>

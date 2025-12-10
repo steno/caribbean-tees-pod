@@ -1,16 +1,17 @@
 import { ProductGrid } from '@/components/ProductGrid'
 import { ExpandableAbout } from '@/components/ExpandableAbout'
 import { AutoScroll } from '@/components/AutoScroll'
+import { Palette, Shirt, Globe } from 'lucide-react'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen relative">
       <AutoScroll />
       {/* Hero Section - Sticky Background */}
-      <section className="sticky top-0 overflow-hidden -z-10 h-[25vh] md:h-[calc(70vh-100px)]">
+      <section className="sticky top-0 overflow-hidden -z-10 h-[calc(51vh-40px+4rem)] md:h-[calc(70vh-100px)] -mt-16 md:mt-0">
         {/* Background GIF - Scales responsively */}
         <div 
-          className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat bg-[center_top] md:bg-[center_calc(50%-20px)]"
+          className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat bg-[center_40px] md:bg-[center_calc(50%+20px)]"
           style={{
             backgroundImage: "url('/home-photo.jpg')",
           }}
@@ -33,9 +34,9 @@ export default function HomePage() {
       <section className="relative bg-gradient-to-br from-sand-100 to-coral-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-ocean-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">🎨</span>
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-ocean-400 to-ocean-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                <Palette className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 Unique Designs
@@ -45,9 +46,9 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-coral-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">👕</span>
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-coral-400 to-coral-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                <Shirt className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 Premium Quality
@@ -57,9 +58,9 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-palm-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">🌍</span>
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-palm-400 to-palm-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                <Globe className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 Worldwide Shipping

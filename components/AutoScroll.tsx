@@ -11,7 +11,7 @@ export function AutoScroll() {
     const timer = setTimeout(() => {
       const isMobile = window.innerWidth < 768
       const scrollOffset = isMobile 
-        ? window.innerHeight * 0.25 - 31 // Mobile: 25vh hero height with offset
+        ? window.innerHeight * 0.51 - 71 // Mobile: calc(51vh-40px) hero height with offset
         : window.innerHeight * 0.5 + 69 // Desktop: original offset
       
       window.scrollTo({

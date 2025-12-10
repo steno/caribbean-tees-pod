@@ -24,12 +24,11 @@ export function ExpandableAbout() {
       {isOpen && (
         <div className="mt-4 text-gray-700 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
           <p className="text-xl">
-            Bring the island vibes to your wardrobe
+            Bring Costambar vibes to your wardrobe
           </p>
           <p className="text-base">
-            Each design is carefully crafted and printed fresh when you order. 
             Premium quality tees with beach and Costambar themes, printed on-demand 
-            and shipped worldwide. Choose your favorite size and we&apos;ll handle the rest!
+            and shipped worldwide. <strong>Choose your favorite size and color. We&apos;ll handle the rest!</strong>
           </p>
         </div>
       )}
