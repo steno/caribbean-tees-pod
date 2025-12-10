@@ -38,7 +38,7 @@ function parseVariantTitle(title: string): { color: string; size: string } {
 }
 
 // Colors to exclude from all products
-const EXCLUDED_COLORS = ['Blue Jean', 'Chili', 'Ice Blue', 'Ivory', 'Pepper', 'Watermelon']
+const EXCLUDED_COLORS = ['Blue Jean', 'Chili', 'Ice Blue', 'Ivory', 'Pepper', 'Watermelon', 'Khaki', 'Berry']
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, openCart } = useCartStore()
