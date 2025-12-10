@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Anybody } from 'next/font/google'
+import Link from 'next/link'
 import './globals.css'
 import { Header } from '@/components/Header'
 import { CartSlideOver } from '@/components/CartSlideOver'
@@ -29,8 +30,17 @@ export default function RootLayout({
         </main>
         <CartSlideOver />
         <footer className="bg-ocean-900 text-white py-12 mt-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-ocean-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-4">
+              <Link href="/privacy" className="text-ocean-200 hover:text-white transition-colors text-sm">
+                Privacy Policy
+              </Link>
+              <span className="text-ocean-400 hidden md:inline">•</span>
+              <Link href="/terms" className="text-ocean-200 hover:text-white transition-colors text-sm">
+                Terms of Service
+              </Link>
+            </div>
+            <p className="text-ocean-200 text-center text-sm">
               © {new Date().getFullYear()} Costambar Tees. Made with 💙 for Costambar.
             </p>
           </div>

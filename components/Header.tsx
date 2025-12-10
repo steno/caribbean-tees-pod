@@ -3,6 +3,7 @@
 import { ShoppingCart } from 'lucide-react'
 import { useCartStore } from '@/store/cart-store'
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 export function Header() {
   const { getTotalItems, openCart } = useCartStore()
@@ -19,11 +20,11 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo - Main H1 for SEO */}
-          <div className="flex items-center">
-          <h1 className="text-xl md:text-2xl font-bold text-white">
-            Costambar Tees
-          </h1>
-          </div>
+          <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
+            <h1 className="text-xl md:text-2xl font-bold text-white">
+              Costambar Tees
+            </h1>
+          </Link>
 
           {/* Cart Button */}
           <button
