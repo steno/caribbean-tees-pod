@@ -87,7 +87,10 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }, [product.variants])
   
-  const [selectedColor, setSelectedColor] = useState<string>(colors[0] || '')
+  // Pick random color on load for visual variety
+  const randomColor = colors[Math.floor(Math.random() * colors.length)] || colors[0] || ''
+  
+  const [selectedColor, setSelectedColor] = useState<string>(randomColor)
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || '')
   const [isAdding, setIsAdding] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
