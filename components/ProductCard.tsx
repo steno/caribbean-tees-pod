@@ -37,6 +37,9 @@ function parseVariantTitle(title: string): { color: string; size: string } {
   }
 }
 
+// Colors to exclude from all products
+const EXCLUDED_COLORS = ['Blue Jean', 'Chili', 'Ice Blue', 'Ivory', 'Pepper', 'Watermelon']
+
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, openCart } = useCartStore()
   
@@ -50,6 +53,10 @@ export function ProductCard({ product }: ProductCardProps) {
       if (!variant.is_available) return
       
       const { color, size } = parseVariantTitle(variant.title)
+      
+      // Skip excluded colors
+      if (EXCLUDED_COLORS.includes(color)) return
+      
       colorSet.add(color)
       sizeSet.add(size)
       map.set(`${color}|${size}`, variant)
