@@ -8,7 +8,7 @@ export default function NotFound() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('/404-beach.png')",
+          backgroundImage: "url('/404-beach.gif')",
         }}
       >
         {/* Overlay for better text readability if needed */}
