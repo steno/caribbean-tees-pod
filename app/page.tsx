@@ -5,70 +5,29 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Beach Theme */}
-      <section className="relative text-white overflow-hidden">
-        {/* Background GIF */}
+      <section className="relative overflow-hidden min-h-[500px]">
+        {/* Background GIF - Just the image, no overlay text */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: "url('/home-bg.gif')",
           }}
-        >
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-br from-ocean-600/40 via-ocean-500/30 to-ocean-400/40"></div>
-        </div>
+        />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            {/* Decorative icons */}
-            <div className="flex justify-center gap-8 mb-6">
-              <Palmtree className="w-12 h-12 text-palm-300 animate-bounce" style={{ animationDelay: '0s' }} />
-              <Waves className="w-12 h-12 text-ocean-200 animate-bounce" style={{ animationDelay: '0.2s' }} />
-              <Ship className="w-12 h-12 text-sand-200 animate-bounce" style={{ animationDelay: '0.4s' }} />
-            </div>
-
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight">
-              Costambar Tees
-            </h1>
-            <p className="text-xl md:text-2xl text-ocean-50 mb-8 max-w-3xl mx-auto">
-              Bring the island vibes to your wardrobe. Premium quality tees with beach and Costambar themes, 
-              printed on-demand and shipped worldwide.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 inline-flex items-center gap-2">
-                <span className="text-2xl">🌴</span>
-                <span className="text-sm">Island Designs</span>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 inline-flex items-center gap-2">
-                <span className="text-2xl">🚚</span>
-                <span className="text-sm">Free Shipping Over $50</span>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 inline-flex items-center gap-2">
-                <span className="text-2xl">♻️</span>
-                <span className="text-sm">Eco-Friendly Printing</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom wave decoration */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1440 120"
-            className="w-full h-auto"
-          >
-            <path
-              fill="#fdfcfb"
-              d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"
-            />
-          </svg>
-        </div>
+        {/* Gradient overlay at bottom for smooth transition */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent"></div>
       </section>
 
       {/* Products Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-gradient-to-r from-ocean-600 via-ocean-500 to-coral-500 bg-clip-text mb-4">
+            Costambar Tees
+          </h1>
+          <p className="text-xl text-gray-700 mb-6 max-w-3xl mx-auto">
+            Bring the island vibes to your wardrobe
+          </p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4 mt-8">
             Shop Our Collection
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
