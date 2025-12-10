@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
 import { ShoppingCart, Check } from 'lucide-react'
 import { useCartStore } from '@/store/cart-store'
@@ -87,13 +87,23 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }, [product.variants])
   
-  // Pick random color on load for visual variety
-  const randomColor = colors[Math.floor(Math.random() * colors.length)] || colors[0] || ''
-  
-  const [selectedColor, setSelectedColor] = useState<string>(randomColor)
+  const [selectedColor, setSelectedColor] = useState<string>(colors[0] || '')
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || '')
   const [isAdding, setIsAdding] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  
+  // Set random color after component mounts (client-side only) to avoid hydration errors
+  useEffect(() => {
+    const randomColor = colors[Math.floor(Math.random() * colors.length)] || colors[0]
+    if (randomColor) {
+      setSelectedColor(randomColor)
+      // Make sure the selected size is available for this color
+      const availableSizes = sizes.filter(s => variantMap.has(`${randomColor}|${s}`))
+      if (availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
+        setSelectedSize(availableSizes[0])
+      }
+    }
+  }, []) // Empty deps - only run once on mount
   
   // Get the selected variant
   const selectedVariant = variantMap.get(`${selectedColor}|${selectedSize}`)
