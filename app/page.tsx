@@ -8,10 +8,10 @@ export default function HomePage() {
     <div className="min-h-screen relative">
       <AutoScroll />
       {/* Hero Section - Sticky Background */}
-      <section className="sticky top-0 overflow-hidden -z-10 h-[calc(51vh-40px+4rem)] md:h-[calc(70vh-100px)] -mt-16 md:mt-0">
+      <section className="sticky top-16 md:top-0 overflow-hidden -z-10 h-[calc(75vh-64px)] md:h-[calc(70vh-100px)]">
         {/* Background GIF - Scales responsively */}
         <div 
-          className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat bg-[center_40px] md:bg-[center_calc(50%+20px)]"
+          className="absolute inset-0 bg-cover bg-no-repeat bg-[center_top] md:bg-[center_calc(50%+20px)]"
           style={{
             backgroundImage: "url('/home-photo.jpg')",
           }}
@@ -19,7 +19,7 @@ export default function HomePage() {
       </section>
 
       {/* Products Section - Scrolls over hero */}
-      <section className="relative bg-white rounded-t-3xl -mt-20 shadow-2xl">
+      <section className="relative bg-white rounded-t-[5.5rem] -mt-20 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           {/* Expandable About Section for SEO */}
