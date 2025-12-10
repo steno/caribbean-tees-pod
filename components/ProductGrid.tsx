@@ -33,7 +33,7 @@ interface Product {
 
 export async function ProductGrid() {
   try {
-    // Fetch products from Firestore
+    // Fetch products from Firestore (always fetch fresh data)
     const db = getAdminDb()
     const productsSnapshot = await db.collection('products').get()
     
