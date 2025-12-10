@@ -136,7 +136,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
       {/* Product Image - Updates based on selected color */}
-      <div className="relative aspect-square bg-sand-100 overflow-hidden">
+      <div className="relative aspect-[4/5] bg-sand-100 overflow-hidden">
         {displayImage ? (
           <Image
             key={displayImage} // Force re-render on image change
@@ -154,31 +154,25 @@ export function ProductCard({ product }: ProductCardProps) {
         
         {/* Color indicator overlay */}
         {selectedColor && (
-          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md">
+          <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-md">
             <span className="text-xs font-semibold text-gray-800">{selectedColor}</span>
           </div>
         )}
       </div>
 
       {/* Product Info */}
-      <div className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
+      <div className="p-4">
+        <h3 className="text-base font-semibold text-gray-900 mb-3 line-clamp-1">
           {product.title}
         </h3>
 
-        {product.description && (
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-            {product.description}
-          </p>
-        )}
-
         {/* Color Selection */}
         {colors.length > 1 && (
-          <div className="mb-4">
-            <label className="block text-xs font-medium text-gray-700 mb-2">
+          <div className="mb-3">
+            <label className="block text-xs font-medium text-gray-700 mb-1.5">
               Color: <span className="font-semibold text-gray-900">{selectedColor}</span>
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {colors.map((color) => {
                 const isAvailable = availableColorsForSize.includes(color)
                 const isSelected = selectedColor === color
@@ -196,7 +190,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     }}
                     disabled={!isAvailable}
                     className={`
-                      px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all min-w-[80px]
+                      px-2 py-1.5 text-xs font-medium rounded-lg border-2 transition-all min-w-[70px]
                       ${
                         isSelected
                           ? 'border-ocean-600 bg-ocean-50 text-ocean-900 ring-2 ring-ocean-600 ring-offset-1'
@@ -216,11 +210,11 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Size Selection */}
-        <div className="mb-4">
-          <label className="block text-xs font-medium text-gray-700 mb-2">
+        <div className="mb-3">
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
             Size: <span className="font-semibold text-gray-900">{selectedSize}</span>
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {sizes.map((size) => {
               const isAvailable = availableSizesForColor.includes(size)
               const isSelected = selectedSize === size
@@ -231,7 +225,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   onClick={() => setSelectedSize(size)}
                   disabled={!isAvailable}
                   className={`
-                    px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all min-w-[60px]
+                    px-2.5 py-1.5 text-xs font-semibold rounded-lg border-2 transition-all min-w-[50px]
                     ${
                       isSelected
                         ? 'border-coral-500 bg-coral-50 text-coral-900 ring-2 ring-coral-500 ring-offset-1'
@@ -251,29 +245,24 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Availability Notice */}
         {!selectedVariant && (
-          <p className="text-xs text-amber-600 mb-3 bg-amber-50 px-3 py-2 rounded-md">
-            ⚠️ This combination is not available. Please select a different color or size.
+          <p className="text-xs text-amber-600 mb-2 bg-amber-50 px-2 py-1.5 rounded-md">
+            ⚠️ Not available. Select different options.
           </p>
         )}
 
         {/* Price and Add to Cart */}
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-sand-200">
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-sand-200">
           <div>
-            <span className="text-2xl font-bold text-ocean-700">
+            <span className="text-xl font-bold text-ocean-700">
               {selectedVariant ? formatPrice(selectedVariant.price) : '—'}
             </span>
-            {selectedVariant && (
-              <p className="text-xs text-gray-500 mt-1">
-                {selectedVariant.title}
-              </p>
-            )}
           </div>
 
           <button
             onClick={handleAddToCart}
             disabled={!selectedVariant || isAdding}
             className={`
-              px-5 py-3 rounded-lg font-semibold transition-all flex items-center gap-2
+              px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm
               ${
                 showSuccess
                   ? 'bg-green-500 text-white'
@@ -284,12 +273,12 @@ export function ProductCard({ product }: ProductCardProps) {
           >
             {showSuccess ? (
               <>
-                <Check className="w-5 h-5" />
+                <Check className="w-4 h-4" />
                 Added!
               </>
             ) : (
               <>
-                <ShoppingCart className="w-5 h-5" />
+                <ShoppingCart className="w-4 h-4" />
                 Add
               </>
             )}
