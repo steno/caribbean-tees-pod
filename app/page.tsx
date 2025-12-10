@@ -3,33 +3,32 @@ import { ExpandableAbout } from '@/components/ExpandableAbout'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
-      {/* Hero Section - Beach Theme */}
-      <section className="relative overflow-hidden min-h-[500px]">
-        {/* Background GIF - Just the image, no overlay text */}
+    <div className="min-h-screen relative">
+      {/* Hero Section - Sticky Background */}
+      <section className="sticky top-0 overflow-hidden h-[70vh] md:h-[80vh] -z-10">
+        {/* Background GIF - Fixed in place */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: "url('/home-bg.gif')",
           }}
         />
-
-        {/* Gradient overlay at bottom for smooth transition */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent"></div>
       </section>
 
-      {/* Products Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      {/* Products Section - Scrolls over hero */}
+      <section className="relative bg-white rounded-t-3xl -mt-20 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
           {/* Expandable About Section for SEO */}
           <ExpandableAbout />
         </div>
 
-        <ProductGrid />
+          <ProductGrid />
+        </div>
       </section>
 
       {/* Features Section */}
-      <section className="bg-gradient-to-br from-sand-100 to-coral-50 py-16 mt-20">
+      <section className="relative bg-gradient-to-br from-sand-100 to-coral-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
