@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Anybody } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/Header'
 import { CartSlideOver } from '@/components/CartSlideOver'
 
-const inter = Inter({ subsets: ['latin'] })
+const anybody = Anybody({ 
+  subsets: ['latin'],
+  variable: '--font-anybody',
+})
 
 export const metadata: Metadata = {
   title: 'Costambar Tees - Beach Vibes & Island Style',
@@ -18,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={anybody.className}>
         <Header />
         <main className="min-h-screen">
           {children}
