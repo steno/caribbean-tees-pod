@@ -18,10 +18,10 @@ export function Header() {
     <header className="bg-gradient-to-br from-ocean-400 via-ocean-500 to-ocean-600 shadow-lg sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo - Main H1 for SEO */}
           <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-white">
-            🌴 Costambar Tees
+          <h1 className="text-xl md:text-2xl font-bold text-white">
+            Costambar Tees
           </h1>
           </div>
 

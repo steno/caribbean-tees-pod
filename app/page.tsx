@@ -21,10 +21,6 @@ export default function HomePage() {
       {/* Products Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-gradient-to-r from-ocean-600 via-ocean-500 to-coral-500 bg-clip-text mb-4">
-            Costambar Tees
-          </h1>
-          
           {/* Expandable About Section for SEO */}
           <ExpandableAbout />
         </div>
