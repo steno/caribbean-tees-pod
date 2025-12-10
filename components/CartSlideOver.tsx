@@ -45,12 +45,12 @@ export function CartSlideOver() {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"
+        className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity animate-in fade-in duration-200"
         onClick={closeCart}
       />
 
       {/* Slide-over panel */}
-      <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-xl z-50 flex flex-col">
+      <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white/95 backdrop-blur-md shadow-xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-sand-200">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
@@ -83,12 +83,12 @@ export function CartSlideOver() {
                 >
                   {/* Product Image */}
                   {item.image_url && (
-                    <div className="flex-shrink-0 w-20 h-20 bg-white rounded-md overflow-hidden">
+                    <div className="flex-shrink-0 w-28 h-28 bg-white rounded-md overflow-hidden shadow-sm">
                       <Image
                         src={item.image_url}
                         alt={item.product_title}
-                        width={80}
-                        height={80}
+                        width={112}
+                        height={112}
                         className="w-full h-full object-cover"
                       />
                     </div>

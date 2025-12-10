@@ -7,12 +7,12 @@ export default function HomePage() {
     <div className="min-h-screen relative">
       <AutoScroll />
       {/* Hero Section - Sticky Background */}
-      <section className="sticky top-0 overflow-hidden -z-10 h-[50vh] md:h-[calc(70vh-100px)]">
+      <section className="sticky top-0 overflow-hidden -z-10 h-[25vh] md:h-[calc(70vh-100px)]">
         {/* Background GIF - Scales responsively */}
         <div 
-          className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat bg-center md:bg-[center_calc(50%+60px)]"
+          className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat bg-[center_top] md:bg-[center_calc(50%-20px)]"
           style={{
-            backgroundImage: "url('/home-bg.gif')",
+            backgroundImage: "url('/home-bg.png')",
           }}
         />
       </section>
