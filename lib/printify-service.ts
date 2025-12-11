@@ -210,6 +210,70 @@ class PrintifyService {
       throw error
     }
   }
+
+  /**
+   * Mark a product's publishing as failed (to clear stuck "Publishing" status)
+   */
+  async markPublishingFailed(productId: string, reason: string = 'Custom store integration - clearing stuck publishing status'): Promise<void> {
+    try {
+      const response = await fetch(
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/products/${productId}/publishing_failed.json`,
+        {
+          method: 'POST',
+          headers: this.headers,
+          body: JSON.stringify({ reason }),
+        }
+      )
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`Printify API error: ${response.statusText} - ${errorText}`)
+      }
+
+      console.log(`✅ Product ${productId} marked as publishing_failed`)
+    } catch (error) {
+      console.error(`Error marking product ${productId} as publishing_failed:`, error)
+      throw error
+    }
+  }
+
+  /**
+   * Publish a product to make it available
+   * The API requires boolean flags for each attribute to publish
+   */
+  async publishProduct(productId: string): Promise<void> {
+    try {
+      // The publish endpoint expects boolean flags, not the actual data
+      const publishData = {
+        title: true,
+        description: true,
+        images: true,
+        variants: true,
+        tags: true,
+        keyFeatures: true,
+        shipping_template: true,
+      }
+
+      const response = await fetch(
+        `${PRINTIFY_API_BASE}/shops/${this.shopId}/products/${productId}/publish.json`,
+        {
+          method: 'POST',
+          headers: this.headers,
+          body: JSON.stringify(publishData),
+        }
+      )
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`Printify API error: ${response.statusText} - ${errorText}`)
+      }
+
+      console.log(`✅ Product ${productId} published successfully`)
+    } catch (error) {
+      console.error(`Error publishing product ${productId}:`, error)
+      throw error
+    }
+  }
 }
 
 export const printifyService = new PrintifyService()

@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync-products": "tsx lib/sync-products.ts"
+    "sync-products": "tsx lib/sync-products.ts",
+    "publish-products": "tsx lib/publish-products.ts",
+    "check-product-status": "tsx lib/check-product-status.ts"
   },
   "dependencies": {
     "next": "^14.2.0",
