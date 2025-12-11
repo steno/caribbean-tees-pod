@@ -32,29 +32,29 @@ export function Header() {
               unoptimized
               priority
             />
-            <h1 className="text-xl md:text-2xl font-bold text-white">
-              Costambar Tees
-            </h1>
+          <h1 className="text-xl md:text-2xl font-bold text-white">
+            Costambar Tees
+          </h1>
           </Link>
 
           {/* Right side: Weather and Cart */}
           <div className="flex items-center gap-3">
             {/* Weather Icon */}
             <WeatherIcon />
-            
-            {/* Cart Button */}
-            <button
-              onClick={openCart}
-              className="relative p-2 text-white hover:text-ocean-100 transition-colors"
-              aria-label="Shopping cart"
-            >
-              <ShoppingCart className="w-6 h-6" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-coral-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </button>
+
+          {/* Cart Button */}
+          <button
+            onClick={openCart}
+            className="relative p-2 text-white hover:text-ocean-100 transition-colors"
+            aria-label="Shopping cart"
+          >
+            <ShoppingCart className="w-6 h-6" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-coral-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </button>
           </div>
         </div>
       </div>

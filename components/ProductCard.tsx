@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
-import { ShoppingCart, Check } from 'lucide-react'
+import { ShoppingCart, Check, Info } from 'lucide-react'
 import { useCartStore } from '@/store/cart-store'
 import { formatPrice } from '@/lib/utils'
 
@@ -34,20 +34,122 @@ interface Product {
   main_image_url: string | null
   variants: ProductVariant[]
   options?: PrintifyOption[] // Options from Printify
+  tags?: string[] // Tags from Printify for filtering
 }
 
 interface ProductCardProps {
   product: Product
 }
 
+// Color mapping for common t-shirt colors
+const getColorHex = (colorName: string): string => {
+  const colorMap: Record<string, string> = {
+    'white': '#FFFFFF',
+    'black': '#000000',
+    'navy': '#001F3F',
+    'heather navy': '#2C3E50',
+    'heather grey': '#B8B8B8',
+    'sport grey': '#A0A0A0',
+    'ash': '#E8E8E8',
+    'charcoal': '#36454F',
+    'olive': '#556B2F',
+    'forest': '#228B22',
+    'army green': '#4B5320',
+    'royal': '#4169E1',
+    'blue': '#0066CC',
+    'blue spruce': '#2E5266',
+    'carolina blue': '#4B9CD3',
+    'light blue': '#ADD8E6',
+    'red': '#DC143C',
+    'maroon': '#800000',
+    'burgundy': '#800020',
+    'pink': '#FFC0CB',
+    'heather pink': '#FFB6C1',
+    'purple': '#800080',
+    'grape': '#6F2DA8',
+    'lavender': '#E6E6FA',
+    'yellow': '#FFD700',
+    'gold': '#FFD700',
+    'orange': '#FF8C00',
+    'coral': '#FF7F50',
+    'crunchberry': '#8B008B',
+    'brown': '#8B4513',
+    'tan': '#D2B48C',
+    'sand': '#F4A460',
+    'cream': '#FFFDD0',
+    'ivory': '#FFFFF0',
+    'natural': '#FAEBD7',
+  }
+  
+  const normalized = colorName.toLowerCase().trim()
+  return colorMap[normalized] || colorMap[normalized.replace(/\s+/g, ' ')] || '#CCCCCC' // Default grey if not found
+}
+
+// Helper function to check if product is women's
+function isWomensProduct(product: Product): boolean {
+  const title = (product.title || '').toLowerCase().trim()
+  const tags = (product.tags || []).map(tag => tag.toLowerCase())
+  
+  // First, check if it's clearly a men's product - if so, it's NOT women's
+  // This includes "Men's (Unisex)" products
+  const hasMenInTitle = title.startsWith("mens") || 
+                        title.startsWith("men's") ||
+                        title.startsWith("men ") ||
+                        (title.includes("(unisex)") && !title.includes("women"))
+  
+  if (hasMenInTitle) {
+    return false
+  }
+  
+  // Check tags first - if it has men's tags and no women's tags, it's NOT women's
+  const hasMenTag = tags.some(tag => {
+    const lowerTag = tag.toLowerCase()
+    return lowerTag.startsWith('men') || 
+           lowerTag.startsWith('male') || 
+           lowerTag.startsWith('man') ||
+           lowerTag === 'mens' ||
+           lowerTag === "men's"
+  })
+  
+  const hasWomenTag = tags.some(tag => {
+    const lowerTag = tag.toLowerCase()
+    return lowerTag.includes('women') || 
+           lowerTag.includes('female') || 
+           lowerTag.includes('woman') ||
+           lowerTag === 'womens' ||
+           lowerTag === "women's" ||
+           lowerTag.includes('softstyle')
+  })
+  
+  // If it has men's tags but no women's tags, it's NOT women's
+  if (hasMenTag && !hasWomenTag) {
+    return false
+  }
+  
+  // Only return true if title clearly indicates women's
+  const hasWomenInTitle = title.startsWith("womens") || 
+                          title.startsWith("women's") ||
+                          title.startsWith("women ") ||
+                          title.includes(" women's ") ||
+                          title.includes("(women's)")
+  
+  // Also check for "softstyle" which is typically women's
+  const hasSoftstyle = title.includes("softstyle")
+  
+  // Return true only if title clearly indicates women's OR has women's tags (and no men's tags)
+  return (hasWomenInTitle || hasSoftstyle) || (hasWomenTag && !hasMenTag)
+}
+
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, openCart } = useCartStore()
+  const isWomens = isWomensProduct(product)
   
   // Extract unique colors and sizes using Printify options
-  const { colors, sizes, variantMap } = useMemo(() => {
+  const { colors, sizes, variantMap, colorHexMap } = useMemo(() => {
     const colorSet = new Set<string>()
     const sizeSet = new Set<string>()
     const map = new Map<string, ProductVariant>()
+    const hexMap = new Map<string, string>() // Map color name to hex
     
     // If we have options from Printify, use them
     if (product.options && product.options.length > 0) {
@@ -60,13 +162,19 @@ export function ProductCard({ product }: ProductCardProps) {
         opt.name.toLowerCase().includes('size')
       )
       
-      // Create maps from option ID to value title
+      // Create maps from option ID to value title and color hex
       const colorIdMap = new Map<number, string>()
+      const colorHexMap = new Map<number, string>()
       const sizeIdMap = new Map<number, string>()
       
       if (colorOption) {
         colorOption.values.forEach(val => {
           colorIdMap.set(val.id, val.title)
+          // Use Printify's color hex if available, otherwise use our mapping
+          const hex = val.colors && val.colors.length > 0 
+            ? val.colors[0] 
+            : getColorHex(val.title)
+          colorHexMap.set(val.id, hex)
         })
       }
       
@@ -97,6 +205,23 @@ export function ProductCard({ product }: ProductCardProps) {
           colorSet.add(color)
           sizeSet.add(size)
           map.set(`${color}|${size}`, variant)
+          // Store hex code for this color
+          if (!hexMap.has(color)) {
+            // Try to get hex from colorOption values
+            if (colorOption) {
+              const colorValue = colorOption.values.find(v => v.title === color)
+              if (colorValue) {
+                const hex = colorValue.colors && colorValue.colors.length > 0 
+                  ? colorValue.colors[0] 
+                  : getColorHex(color)
+                hexMap.set(color, hex)
+              } else {
+                hexMap.set(color, getColorHex(color))
+              }
+            } else {
+              hexMap.set(color, getColorHex(color))
+            }
+          }
         }
       })
     } else {
@@ -112,6 +237,10 @@ export function ProductCard({ product }: ProductCardProps) {
           colorSet.add(color)
           sizeSet.add(size)
           map.set(`${color}|${size}`, variant)
+          // Store hex code for this color (fallback parsing)
+          if (!hexMap.has(color)) {
+            hexMap.set(color, getColorHex(color))
+          }
         }
       })
     }
@@ -137,7 +266,8 @@ export function ProductCard({ product }: ProductCardProps) {
     return {
       colors: sortedColors,
       sizes: sortedSizes,
-      variantMap: map
+      variantMap: map,
+      colorHexMap: hexMap
     }
   }, [product.variants, product.options])
   
@@ -145,6 +275,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || '')
   const [isAdding, setIsAdding] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showInfo, setShowInfo] = useState(false)
   
   // Set initial color after component mounts (client-side only) to avoid hydration errors
   // Prefer White, otherwise use first available color
@@ -220,6 +351,145 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         
+        {/* Info Icon - Top Left */}
+        <div className="absolute top-2 left-2 z-10">
+          <button
+            onClick={() => setShowInfo(!showInfo)}
+            onMouseEnter={() => setShowInfo(true)}
+            onMouseLeave={() => setShowInfo(false)}
+            className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all"
+            aria-label="Product information"
+          >
+            <Info className="w-4 h-4 text-ocean-600" />
+          </button>
+          
+          {/* Info Popover */}
+          {showInfo && (
+            <div 
+              className="absolute top-12 left-0 w-[calc(100vw-2rem)] sm:w-72 max-w-sm bg-white rounded-lg shadow-xl border border-sand-200 p-2.5 sm:p-3 z-20"
+              onMouseEnter={() => setShowInfo(true)}
+              onMouseLeave={() => setShowInfo(false)}
+            >
+              <div className="space-y-2 sm:space-y-3 text-[10px] sm:text-xs">
+                {/* Product Features */}
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 text-[9px] sm:text-[10px] uppercase tracking-wide">
+                    Product Features
+                  </h4>
+                  <ul className="space-y-0.5 sm:space-y-1 text-gray-700 leading-tight">
+                    {isWomens ? (
+                      <>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>100% ringspun cotton (solids), lightweight 4.5 oz</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Ribbed knit collar with seam</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Twill shoulder tape and side seams</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Double-needle sleeve and bottom hem</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Semi-fitted cut, true to size</span>
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Sizes S–4XL, Comfort Colors 1717 sizing</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>100% ring-spun US cotton, pre-shrunk (6.1 oz/yd²)</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Garment-dyed for soft, lived-in texture</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Tubular knit, double-needle stitched</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-ocean-600 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Relaxed fit, made in Honduras</span>
+                        </li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+                
+                {/* Divider */}
+                <div className="border-t border-sand-200"></div>
+                
+                {/* Care Instructions */}
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 text-[9px] sm:text-[10px] uppercase tracking-wide">
+                    Care Instructions
+                  </h4>
+                  <ul className="space-y-0.5 sm:space-y-1 text-gray-700 leading-tight">
+                    {isWomens ? (
+                      <>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Machine wash cold (max 30°C/90°F)</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Non-chlorine bleach as needed</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Tumble dry medium</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Do not iron</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Do not dryclean</span>
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Machine wash cold (max 30°C/90°F)</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Do not bleach</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Tumble dry low heat</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Iron/steam low heat</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-coral-500 mr-1 sm:mr-1.5 flex-shrink-0">•</span>
+                          <span>Do not dryclean</span>
+                        </li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        
         {/* Color indicator overlay */}
         {selectedColor && (
           <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-md">
@@ -229,8 +499,8 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Product Info */}
-      <div className="p-4">
-        <h3 className="text-base font-semibold text-gray-900 mb-3 line-clamp-2">
+      <div className="p-4 text-center">
+        <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
           {product.title}
         </h3>
 
@@ -240,10 +510,11 @@ export function ProductCard({ product }: ProductCardProps) {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Color: <span className="font-semibold text-gray-900">{selectedColor}</span>
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3 justify-center">
               {colors.map((color) => {
                 const isAvailable = availableColorsForSize.includes(color)
                 const isSelected = selectedColor === color
+                const colorHex = colorHexMap.get(color) || getColorHex(color)
                 
                 return (
                   <button
@@ -258,18 +529,26 @@ export function ProductCard({ product }: ProductCardProps) {
                     }}
                     disabled={!isAvailable}
                     className={`
-                      px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all min-w-[80px]
-                      ${
-                        isSelected
-                          ? 'border-ocean-600 bg-ocean-50 text-ocean-900 ring-1 ring-ocean-600'
-                          : isAvailable
-                          ? 'border-sand-200 bg-white text-gray-700 hover:border-ocean-400 hover:bg-sand-50'
-                          : 'border-sand-200 bg-gray-50 text-gray-400 cursor-not-allowed opacity-50'
+                      w-10 h-10 rounded-full border-2 transition-all relative
+                      ${isSelected 
+                        ? 'border-ocean-600 ring-2 ring-ocean-600 ring-offset-2 scale-110' 
+                        : isAvailable
+                        ? 'border-gray-300 hover:border-ocean-400 hover:scale-105'
+                        : 'border-gray-200 opacity-40 cursor-not-allowed'
                       }
                     `}
+                    style={{
+                      backgroundColor: colorHex,
+                      boxShadow: isSelected ? '0 0 0 2px rgba(59, 130, 246, 0.3)' : 'none'
+                    }}
                     title={isAvailable ? color : `${color} (unavailable in size ${selectedSize})`}
+                    aria-label={`Select color ${color}`}
                   >
-                    {color}
+                    {isSelected && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-3 h-3 bg-white rounded-full border border-ocean-600"></div>
+                      </div>
+                    )}
                   </button>
                 )
               })}
@@ -282,7 +561,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Size: <span className="font-semibold text-gray-900">{selectedSize}</span>
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 justify-center">
             {sizes.map((size) => {
               const isAvailable = availableSizesForColor.includes(size)
               const isSelected = selectedSize === size

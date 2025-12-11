@@ -20,6 +20,16 @@ interface Product {
   description: string | null
   main_image_url: string | null
   variants: ProductVariant[]
+  tags?: string[] // Tags from Printify for filtering
+  options?: Array<{
+    name: string
+    type: string
+    values: Array<{
+      id: number
+      title: string
+      colors?: string[]
+    }>
+  }>
 }
 
 interface ProductSliderProps {
@@ -98,3 +108,4 @@ export function ProductSlider({ products }: ProductSliderProps) {
     </div>
   )
 }
+

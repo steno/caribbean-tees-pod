@@ -45,3 +45,4 @@ export function ProductFilter({ onFilterChange, activeFilter }: ProductFilterPro
     </div>
   )
 }
+

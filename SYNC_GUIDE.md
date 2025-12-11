@@ -128,3 +128,4 @@ Then just run: `./sync.sh`
 ## 🔐 Security Note
 
 Make sure to set `SYNC_SECRET` in your environment variables to protect the sync endpoint from unauthorized access.
+

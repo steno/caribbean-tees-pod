@@ -82,3 +82,5 @@ If you're seeing **$2,943.00**, the price stored in Firebase is likely **294,300
    - Line 125 in `sync-products.ts`: `Math.round(variant.price * 100)`
    - If Printify returns `29.43`, this should store `2943` ✓
    - If Printify returns `2943`, this stores `294300` ❌
+
+
