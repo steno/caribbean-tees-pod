@@ -526,7 +526,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </h3>
 
         {/* Color Selection */}
-        {colors.length > 1 && (
+        {colors.length > 0 && (
           <div className="mb-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Color: <span className="font-semibold text-gray-900">{selectedColor}</span>

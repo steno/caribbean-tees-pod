@@ -7,7 +7,7 @@ export function AutoScroll() {
     // Immediately scroll to top on page load/refresh
     window.scrollTo({ top: 0, behavior: 'instant' })
 
-    // Wait 4 seconds after page load, then auto-scroll to products
+    // Wait 2 seconds after page load, then auto-scroll to products
     const timer = setTimeout(() => {
       const isMobile = window.innerWidth < 768
       const scrollOffset = isMobile 
@@ -18,7 +18,7 @@ export function AutoScroll() {
         top: scrollOffset,
         behavior: 'smooth'
       })
-    }, 4000) // 4 seconds delay
+    }, 2000) // 2 seconds delay
 
     return () => clearTimeout(timer)
   }, [])
