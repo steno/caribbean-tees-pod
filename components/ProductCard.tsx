@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
-import { ShoppingCart, Check, Info } from 'lucide-react'
+import { ShoppingCart, Check, Info, Loader2 } from 'lucide-react'
 import { useCartStore } from '@/store/cart-store'
 import { formatPrice } from '@/lib/utils'
 
@@ -276,6 +276,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
+  const [imageLoading, setImageLoading] = useState(true)
   
   // Set initial color after component mounts (client-side only) to avoid hydration errors
   // Prefer White, otherwise use first available color
@@ -296,6 +297,11 @@ export function ProductCard({ product }: ProductCardProps) {
   
   // Get the display image - use variant image if available, otherwise main product image
   const displayImage = selectedVariant?.image_url || product.main_image_url
+  
+  // Reset loading state when image changes
+  useEffect(() => {
+    setImageLoading(true)
+  }, [displayImage])
   
   // Check which sizes are available for current color
   const availableSizesForColor = useMemo(() => {
@@ -337,14 +343,25 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Product Image - Smaller and more compact */}
       <div className="relative aspect-[4/3] bg-sand-100 overflow-hidden">
         {displayImage ? (
-          <Image
-            key={displayImage} // Force re-render on image change
-            src={displayImage}
-            alt={`${product.title} - ${selectedColor}`}
-            fill
-            className="object-cover group-hover:scale-125 transition-all duration-500"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-          />
+          <>
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <Loader2 className="w-8 h-8 text-ocean-600 animate-spin" />
+              </div>
+            )}
+            <Image
+              key={displayImage} // Force re-render on image change
+              src={displayImage}
+              alt={`${product.title} - ${selectedColor}`}
+              fill
+              className={`object-cover group-hover:scale-125 transition-all duration-500 ${
+                imageLoading ? 'opacity-0' : 'opacity-100'
+              }`}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+              onLoad={() => setImageLoading(false)}
+              onLoadStart={() => setImageLoading(true)}
+            />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-sand-400">
             No image
@@ -544,11 +561,6 @@ export function ProductCard({ product }: ProductCardProps) {
                     title={isAvailable ? color : `${color} (unavailable in size ${selectedSize})`}
                     aria-label={`Select color ${color}`}
                   >
-                    {isSelected && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-3 h-3 bg-white rounded-full border border-ocean-600"></div>
-                      </div>
-                    )}
                   </button>
                 )
               })}

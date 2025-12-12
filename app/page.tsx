@@ -1,4 +1,6 @@
+import { Suspense } from 'react'
 import { ProductGrid } from '@/components/ProductGrid'
+import { ProductGridLoading } from '@/components/ProductGridLoading'
 import { ExpandableAbout } from '@/components/ExpandableAbout'
 import { AutoScroll } from '@/components/AutoScroll'
 import { Palette, Shirt, Globe } from 'lucide-react'
@@ -30,7 +32,9 @@ export default function HomePage() {
           <ExpandableAbout />
         </div>
 
-          <ProductGrid />
+          <Suspense fallback={<ProductGridLoading />}>
+            <ProductGrid />
+          </Suspense>
         </div>
       </section>
 

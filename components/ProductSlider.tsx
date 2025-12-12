@@ -50,34 +50,46 @@ export function ProductSlider({ products }: ProductSliderProps) {
   )
   
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? totalPages - 1 : prev - 1))
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1)
+    }
   }
   
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev === totalPages - 1 ? 0 : prev + 1))
+    if (currentIndex < totalPages - 1) {
+      setCurrentIndex((prev) => prev + 1)
+    }
   }
+  
+  // Check if there are more products in each direction
+  const hasPrevious = currentIndex > 0
+  const hasNext = currentIndex < totalPages - 1
   
   // Always show slider structure, even with 2 products
   return (
     <div className="relative">
-      {/* Navigation Arrows - Show when more than 1 page */}
+      {/* Navigation Arrows - Show only when there are more products in that direction */}
       {totalPages > 1 && (
         <>
-          <button
-            onClick={goToPrevious}
-            className="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:scale-110 border-2 border-ocean-200 hover:border-ocean-400"
-            aria-label="Previous products"
-          >
-            <ChevronLeft className="w-5 h-5 text-ocean-600" />
-          </button>
+          {hasPrevious && (
+            <button
+              onClick={goToPrevious}
+              className="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:scale-110 border-2 border-ocean-200 hover:border-ocean-400"
+              aria-label="Previous products"
+            >
+              <ChevronLeft className="w-5 h-5 text-ocean-600" />
+            </button>
+          )}
           
-          <button
-            onClick={goToNext}
-            className="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:scale-110 border-2 border-ocean-200 hover:border-ocean-400"
-            aria-label="Next products"
-          >
-            <ChevronRight className="w-5 h-5 text-ocean-600" />
-          </button>
+          {hasNext && (
+            <button
+              onClick={goToNext}
+              className="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:scale-110 border-2 border-ocean-200 hover:border-ocean-400"
+              aria-label="Next products"
+            >
+              <ChevronRight className="w-5 h-5 text-ocean-600" />
+            </button>
+          )}
         </>
       )}
       
@@ -86,6 +98,22 @@ export function ProductSlider({ products }: ProductSliderProps) {
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
+        {/* Placeholder when only 1 product on page */}
+        {currentProducts.length === 1 && (
+          <div className="bg-white rounded-xl shadow-md overflow-hidden opacity-60">
+            {/* Placeholder Image */}
+            <div className="relative aspect-[4/3] bg-gray-300 overflow-hidden flex items-center justify-center">
+              <div className="text-center px-4">
+                <p className="text-gray-600 text-sm font-medium">More Coming Soon</p>
+              </div>
+            </div>
+            {/* Placeholder Content */}
+            <div className="p-4">
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          </div>
+        )}
       </div>
       
       {/* Page Indicators - Show when more than 1 page */}

@@ -69,6 +69,7 @@ export async function ProductGrid() {
           tags: productData.tags || [],
           visible: productData.visible !== false,
           options: productData.options || undefined,
+          created_at: productData.created_at || null,
         })
       }
     }
