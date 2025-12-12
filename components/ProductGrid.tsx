@@ -20,6 +20,7 @@ interface Product {
   variants: ProductVariant[]
   tags?: string[] // Tags from Printify for filtering
   visible?: boolean // Visibility status from Printify
+  created_at?: string | null
   options?: Array<{
     name: string
     type: string

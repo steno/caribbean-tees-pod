@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { ShoppingCart, Check, Info, Loader2 } from 'lucide-react'
 import { useCartStore } from '@/store/cart-store'
@@ -277,20 +277,24 @@ export function ProductCard({ product }: ProductCardProps) {
   const [showSuccess, setShowSuccess] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
   const [imageLoading, setImageLoading] = useState(true)
+  const hasInitializedColor = useRef(false)
   
   // Set initial color after component mounts (client-side only) to avoid hydration errors
   // Prefer White, otherwise use first available color
   useEffect(() => {
+    if (colors.length === 0 || hasInitializedColor.current) return
+    
     const initialColor = colors.find(color => color.toLowerCase() === 'white') || colors[0]
     if (initialColor) {
       setSelectedColor(initialColor)
+      hasInitializedColor.current = true
       // Make sure the selected size is available for this color
       const availableSizes = sizes.filter(s => variantMap.has(`${initialColor}|${s}`))
       if (availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
         setSelectedSize(availableSizes[0])
       }
     }
-  }, []) // Empty deps - only run once on mount
+  }, [colors, selectedSize, sizes, variantMap])
   
   // Get the selected variant
   const selectedVariant = variantMap.get(`${selectedColor}|${selectedSize}`)
