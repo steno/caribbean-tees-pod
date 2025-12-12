@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { ProductCard } from './ProductCard'
 
@@ -38,9 +38,20 @@ interface ProductSliderProps {
 
 export function ProductSlider({ products }: ProductSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [itemsPerPage, setItemsPerPage] = useState(2)
   
-  // Show 2 products at a time
-  const itemsPerPage = 2
+  // Responsive items per page: 1 on mobile, 2 on desktop
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      setItemsPerPage(window.innerWidth < 1024 ? 1 : 2)
+    }
+    
+    updateItemsPerPage()
+    window.addEventListener('resize', updateItemsPerPage)
+    
+    return () => window.removeEventListener('resize', updateItemsPerPage)
+  }, [])
+  
   const totalPages = Math.ceil(products.length / itemsPerPage)
   
   // Get current products to display
@@ -48,6 +59,11 @@ export function ProductSlider({ products }: ProductSliderProps) {
     currentIndex * itemsPerPage,
     currentIndex * itemsPerPage + itemsPerPage
   )
+  
+  // Reset to first page when itemsPerPage changes
+  useEffect(() => {
+    setCurrentIndex(0)
+  }, [itemsPerPage])
   
   const goToPrevious = () => {
     if (currentIndex > 0) {
@@ -98,9 +114,9 @@ export function ProductSlider({ products }: ProductSliderProps) {
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
-        {/* Placeholder when only 1 product on page */}
-        {currentProducts.length === 1 && (
-          <div className="bg-white rounded-xl shadow-md overflow-hidden opacity-60">
+        {/* Placeholder when only 1 product on page (desktop only) */}
+        {currentProducts.length === 1 && itemsPerPage === 2 && (
+          <div className="hidden lg:block bg-white rounded-xl shadow-md overflow-hidden opacity-60">
             {/* Placeholder Image */}
             <div className="relative aspect-[4/3] bg-gray-300 overflow-hidden flex items-center justify-center">
               <div className="text-center px-4">
