@@ -65,6 +65,12 @@ export function ProductSlider({ products }: ProductSliderProps) {
     setCurrentIndex(0)
   }, [itemsPerPage])
   
+  // Reset to first page when products list changes (filter or sort change)
+  // This ensures correct sorting when filters/sort options change
+  useEffect(() => {
+    setCurrentIndex(0)
+  }, [products])
+  
   const goToPrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1)
