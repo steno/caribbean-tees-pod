@@ -14,7 +14,7 @@ interface ProductFilterProps {
 
 export function ProductFilter({ onFilterChange, activeFilter, onSortChange, activeSort }: ProductFilterProps) {
   return (
-    <div className="flex justify-between items-center mb-8 flex-wrap gap-3">
+    <div className="flex flex-col md:flex-row justify-center md:justify-between items-center mb-8 gap-3">
       <div className="flex items-center gap-3">
         <button
           onClick={() => onFilterChange('all')}
@@ -48,9 +48,6 @@ export function ProductFilter({ onFilterChange, activeFilter, onSortChange, acti
         </button>
       </div>
       <div className="flex items-center gap-2">
-        <label htmlFor="sort-select" className="text-sm font-medium text-gray-700 whitespace-nowrap">
-          Sort:
-        </label>
         <select
           id="sort-select"
           value={activeSort}
