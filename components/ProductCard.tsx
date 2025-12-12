@@ -358,7 +358,7 @@ export function ProductCard({ product }: ProductCardProps) {
               src={displayImage}
               alt={`${product.title} - ${selectedColor}`}
               fill
-              className={`object-cover group-hover:scale-125 transition-all duration-500 ${
+              className={`object-cover scale-100 group-hover:scale-125 transition-all duration-500 ${
                 imageLoading ? 'opacity-0' : 'opacity-100'
               }`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"

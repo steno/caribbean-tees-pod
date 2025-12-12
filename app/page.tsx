@@ -3,6 +3,7 @@ import { ProductGrid } from '@/components/ProductGrid'
 import { ProductGridLoading } from '@/components/ProductGridLoading'
 import { ExpandableAbout } from '@/components/ExpandableAbout'
 import { AutoScroll } from '@/components/AutoScroll'
+import { RotatingHero } from '@/components/RotatingHero'
 import { Palette, Shirt, Globe } from 'lucide-react'
 
 // Force dynamic rendering to prevent caching
@@ -13,16 +14,8 @@ export default function HomePage() {
   return (
     <div className="min-h-screen relative">
       <AutoScroll />
-      {/* Hero Section - Sticky Background */}
-      <section className="sticky top-16 md:top-0 overflow-hidden -z-10 h-[calc(75vh-64px)] md:h-[calc(70vh-100px)]">
-        {/* Background GIF - Scales responsively */}
-        <div 
-          className="absolute inset-0 bg-cover bg-no-repeat bg-[center_top] md:bg-[center_calc(50%+20px)]"
-          style={{
-            backgroundImage: "url('/home-photo.jpg')",
-          }}
-        />
-      </section>
+      {/* Hero Section - Rotating Background */}
+      <RotatingHero />
 
       {/* Products Section - Scrolls over hero */}
       <section className="relative bg-white rounded-t-[5.5rem] -mt-20 shadow-2xl">
