@@ -83,9 +83,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  other: {
-    'fb:app_id': '1234567890', // TODO: Replace with your actual Facebook App ID when created
-  },
   twitter: {
     card: 'summary_large_image',
     title: 'Costambar Tees - Beach Vibes & Island Style',
@@ -150,6 +147,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta property="fb:app_id" content="1234567890" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
