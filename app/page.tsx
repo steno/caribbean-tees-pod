@@ -16,7 +16,7 @@ export default function HomePage() {
       <RotatingHero />
 
       {/* Products Section - Scrolls over hero */}
-      <section className="relative bg-white rounded-t-[5.5rem] -mt-20 shadow-2xl">
+      <section className="relative bg-white rounded-t-[2.5rem] md:rounded-t-[3.5rem] -mt-20 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           {/* Expandable About Section for SEO */}
@@ -30,17 +30,24 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="relative bg-gray-200 py-16">
+      <section 
+        className="relative py-16"
+        style={{
+          backgroundImage: "url('/wood-bg.png')",
+          backgroundSize: 'contain',
+          backgroundRepeat: 'repeat-x',
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center group">
               <div className="w-20 h-20 bg-gradient-to-br from-ocean-400 to-ocean-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                 <Palette className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-ocean-200 mb-2">
                 Unique Designs
               </h3>
-              <p className="text-gray-600">
+              <p className="text-ocean-100">
                 Original Costambar-inspired artwork you won&apos;t find anywhere else
               </p>
             </div>
@@ -49,10 +56,10 @@ export default function HomePage() {
               <div className="w-20 h-20 bg-gradient-to-br from-coral-400 to-coral-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                 <Shirt className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-coral-200 mb-2">
                 Premium Quality
               </h3>
-              <p className="text-gray-600">
+              <p className="text-coral-100">
                 Soft, comfortable fabrics that feel as good as island breeze
               </p>
             </div>
@@ -61,10 +68,10 @@ export default function HomePage() {
               <div className="w-20 h-20 bg-gradient-to-br from-palm-400 to-palm-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                 <Globe className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-palm-200 mb-2">
                 Worldwide Shipping
               </h3>
-              <p className="text-gray-600">
+              <p className="text-palm-100">
                 Printed locally and shipped directly to your door
               </p>
             </div>
