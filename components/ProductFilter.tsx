@@ -52,7 +52,13 @@ export function ProductFilter({ onFilterChange, activeFilter, onSortChange, acti
           id="sort-select"
           value={activeSort}
           onChange={(e) => onSortChange(e.target.value as SortOption)}
-          className="px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-700 border-2 border-sand-200 hover:border-ocean-300 hover:bg-ocean-50 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-ocean-300 focus:border-ocean-400"
+          className="px-4 py-2 rounded-full text-sm font-medium bg-ocean-600 text-white shadow-lg transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-ocean-300 appearance-none pr-8"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 0.75rem center',
+            backgroundSize: '12px'
+          }}
         >
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>

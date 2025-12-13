@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { ProductCard } from './ProductCard'
 
@@ -39,6 +39,9 @@ interface ProductSliderProps {
 export function ProductSlider({ products }: ProductSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [itemsPerPage, setItemsPerPage] = useState(2)
+  const sliderRef = useRef<HTMLDivElement>(null)
+  const touchStartX = useRef<number | null>(null)
+  const touchEndX = useRef<number | null>(null)
   
   // Responsive items per page: 1 on mobile, 2 on desktop
   useEffect(() => {
@@ -87,30 +90,81 @@ export function ProductSlider({ products }: ProductSliderProps) {
   const hasPrevious = currentIndex > 0
   const hasNext = currentIndex < totalPages - 1
   
+  // Swipe gesture handlers for mobile
+  const minSwipeDistance = 50
+  
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchEndX.current = null
+    touchStartX.current = e.targetTouches[0].clientX
+  }
+  
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX
+  }
+  
+  const onTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return
+    
+    const distance = touchStartX.current - touchEndX.current
+    
+    if (distance > minSwipeDistance && hasNext) {
+      goToNext()
+    }
+    if (distance < -minSwipeDistance && hasPrevious) {
+      goToPrevious()
+    }
+  }
+  
   // Always show slider structure, even with 2 products
   return (
-    <div className="relative">
-      {/* Navigation Arrows - Show only when there are more products in that direction */}
+    <div 
+      className="relative"
+      ref={sliderRef}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      {/* Minimal Edge Navigation - Desktop only, subtle design */}
       {totalPages > 1 && (
         <>
+          {/* Left edge - simple chevron without circle */}
           {hasPrevious && (
-            <button
-              onClick={goToPrevious}
-              className="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:scale-110 border-2 border-ocean-200 hover:border-ocean-400"
-              aria-label="Previous products"
-            >
-              <ChevronLeft className="w-5 h-5 text-ocean-600" />
-            </button>
+            <>
+              {/* Desktop: Simple chevron icon */}
+              <button
+                onClick={goToPrevious}
+                className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 items-center justify-center hover:opacity-70 transition-opacity"
+                aria-label="Previous products"
+              >
+                <ChevronLeft className="w-16 h-16 stroke-[4]" style={{ color: '#217ba1' }} />
+              </button>
+              {/* Mobile: Invisible tap zone on left edge */}
+              <button
+                onClick={goToPrevious}
+                className="lg:hidden absolute left-0 top-0 bottom-0 w-12 z-10"
+                aria-label="Previous products"
+              />
+            </>
           )}
           
+          {/* Right edge - simple chevron without circle */}
           {hasNext && (
-            <button
-              onClick={goToNext}
-              className="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:scale-110 border-2 border-ocean-200 hover:border-ocean-400"
-              aria-label="Next products"
-            >
-              <ChevronRight className="w-5 h-5 text-ocean-600" />
-            </button>
+            <>
+              {/* Desktop: Simple chevron icon */}
+              <button
+                onClick={goToNext}
+                className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 items-center justify-center hover:opacity-70 transition-opacity"
+                aria-label="Next products"
+              >
+                <ChevronRight className="w-16 h-16 stroke-[4]" style={{ color: '#217ba1' }} />
+              </button>
+              {/* Mobile: Invisible tap zone on right edge */}
+              <button
+                onClick={goToNext}
+                className="lg:hidden absolute right-0 top-0 bottom-0 w-12 z-10"
+                aria-label="Next products"
+              />
+            </>
           )}
         </>
       )}
@@ -143,17 +197,17 @@ export function ProductSlider({ products }: ProductSliderProps) {
         )}
       </div>
       
-      {/* Page Indicators - Show when more than 1 page */}
+      {/* Page Indicators - Enhanced for mobile */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-6">
+        <div className="flex justify-center items-center gap-2 mt-6 mb-4">
           {Array.from({ length: totalPages }).map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`h-2 rounded-full transition-all ${
+              className={`rounded-full transition-all ${
                 index === currentIndex
-                  ? 'w-8 bg-ocean-600'
-                  : 'w-2 bg-sand-300 hover:bg-sand-400'
+                  ? 'w-8 h-2.5 bg-ocean-600 shadow-md'
+                  : 'w-2.5 h-2.5 bg-sand-300 hover:bg-ocean-400 active:bg-ocean-500'
               }`}
               aria-label={`Go to page ${index + 1}`}
             />

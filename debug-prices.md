@@ -84,3 +84,6 @@ If you're seeing **$2,943.00**, the price stored in Firebase is likely **294,300
    - If Printify returns `2943`, this stores `294300` ❌
 
 
+
+
+

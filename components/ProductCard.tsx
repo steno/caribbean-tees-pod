@@ -280,11 +280,14 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasInitializedColor = useRef(false)
   
   // Set initial color after component mounts (client-side only) to avoid hydration errors
-  // Prefer White, otherwise use first available color
+  // Randomly select from available colors
   useEffect(() => {
     if (colors.length === 0 || hasInitializedColor.current) return
     
-    const initialColor = colors.find(color => color.toLowerCase() === 'white') || colors[0]
+    // Randomly select a color from available options
+    const randomIndex = Math.floor(Math.random() * colors.length)
+    const initialColor = colors[randomIndex]
+    
     if (initialColor) {
       setSelectedColor(initialColor)
       hasInitializedColor.current = true
@@ -343,7 +346,13 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
+    <div 
+      className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group"
+      style={{
+        paddingTop: '40px',
+        boxShadow: 'rgba(3, 137, 178, 0.3) 0px 0px 0px 3px'
+      }}
+    >
       {/* Product Image - Smaller and more compact */}
       <div className="relative aspect-[4/3] bg-sand-100 overflow-hidden">
         {displayImage ? (
@@ -358,7 +367,7 @@ export function ProductCard({ product }: ProductCardProps) {
               src={displayImage}
               alt={`${product.title} - ${selectedColor}`}
               fill
-              className={`object-cover scale-100 group-hover:scale-125 transition-all duration-500 ${
+              className={`object-cover scale-100 group-hover:scale-[1.5] transition-all duration-500 ${
                 imageLoading ? 'opacity-0' : 'opacity-100'
               }`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
@@ -511,12 +520,12 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
         
-        {/* Color indicator overlay */}
-        {selectedColor && (
+        {/* Color indicator overlay - Hidden per user request */}
+        {/* {selectedColor && (
           <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-md">
             <span className="text-xs font-semibold text-gray-800">{selectedColor}</span>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Product Info */}
