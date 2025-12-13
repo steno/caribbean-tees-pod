@@ -14,6 +14,26 @@ const anybody = Anybody({
 export const metadata: Metadata = {
   title: 'Costambar Tees - Beach Vibes & Island Style',
   description: 'Premium print-on-demand t-shirts with Costambar and beach themes. Order custom printed shirts delivered to your door.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      { rel: 'mask-icon', url: '/CT-Logo-final.png' },
+    ],
+  },
+  manifest: '/site.webmanifest',
+  themeColor: '#0389b2',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Costambar Tees',
+  },
 }
 
 export default function RootLayout({
