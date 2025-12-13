@@ -170,7 +170,7 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
 
 export function ProductGridClient({ products }: ProductGridClientProps) {
   const [activeFilter, setActiveFilter] = useState<GenderFilter>('all')
-  const [activeSort, setActiveSort] = useState<SortOption>('newest')
+  const [activeSort, setActiveSort] = useState<SortOption>('random')
   
   // Helper function to get minimum price from variants
   const getMinPrice = (product: Product): number => {
@@ -193,32 +193,42 @@ export function ProductGridClient({ products }: ProductGridClientProps) {
     console.log(`Filter: ${activeFilter} | Total: ${products.length} | Filtered: ${filtered.length}`)
     
     // Then sort
-    const sorted = [...filtered].sort((a, b) => {
-      switch (activeSort) {
-        case 'price-low': {
-          const priceA = getMinPrice(a)
-          const priceB = getMinPrice(b)
-          return priceA - priceB
-        }
-        case 'price-high': {
-          const priceA = getMinPrice(a)
-          const priceB = getMinPrice(b)
-          return priceB - priceA
-        }
-        case 'newest': {
-          const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
-          const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
-          return dateB - dateA // Newest first (descending)
-        }
-        case 'oldest': {
-          const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
-          const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
-          return dateA - dateB // Oldest first (ascending)
-        }
-        default:
-          return 0
+    let sorted: Product[]
+    if (activeSort === 'random') {
+      // Shuffle array randomly
+      sorted = [...filtered]
+      for (let i = sorted.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [sorted[i], sorted[j]] = [sorted[j], sorted[i]]
       }
-    })
+    } else {
+      sorted = [...filtered].sort((a, b) => {
+        switch (activeSort) {
+          case 'price-low': {
+            const priceA = getMinPrice(a)
+            const priceB = getMinPrice(b)
+            return priceA - priceB
+          }
+          case 'price-high': {
+            const priceA = getMinPrice(a)
+            const priceB = getMinPrice(b)
+            return priceB - priceA
+          }
+          case 'newest': {
+            const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+            const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+            return dateB - dateA // Newest first (descending)
+          }
+          case 'oldest': {
+            const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+            const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+            return dateA - dateB // Oldest first (ascending)
+          }
+          default:
+            return 0
+        }
+      })
+    }
     
     return sorted
   }, [products, activeFilter, activeSort])

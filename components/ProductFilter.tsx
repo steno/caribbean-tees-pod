@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 export type GenderFilter = 'all' | 'men' | 'women'
-export type SortOption = 'price-low' | 'price-high' | 'newest' | 'oldest'
+export type SortOption = 'random' | 'price-low' | 'price-high' | 'newest' | 'oldest'
 
 interface ProductFilterProps {
   onFilterChange: (filter: GenderFilter) => void
@@ -60,6 +60,7 @@ export function ProductFilter({ onFilterChange, activeFilter, onSortChange, acti
             backgroundSize: '12px'
           }}
         >
+          <option value="random">Random</option>
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
           <option value="price-low">Price: Low to High</option>
