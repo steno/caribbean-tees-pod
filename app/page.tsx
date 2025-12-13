@@ -17,6 +17,7 @@ export default function HomePage() {
       
       {/* Products Section - Starts below hero */}
       <section 
+        aria-labelledby="products-heading"
         className="relative bg-white rounded-t-[2.5rem] md:rounded-t-[3.5rem] mt-[calc(75vh-240px)] md:mt-[calc(70vh-240px)] shadow-2xl"
         style={{
           border: '10px solid rgba(255, 255, 255, 0.5)',
@@ -25,6 +26,9 @@ export default function HomePage() {
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h2 id="products-heading" className="sr-only">
+            Caribbean-Inspired T-Shirts Collection
+          </h2>
           <div className="text-center mb-8">
             {/* Expandable About Section for SEO */}
             <ExpandableAbout />
@@ -38,6 +42,7 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section 
+        aria-labelledby="features-heading"
         className="relative py-16 bg-repeat md:bg-repeat-x"
         style={{
           backgroundImage: "url('/wood-bg.png')",
@@ -46,9 +51,15 @@ export default function HomePage() {
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 id="features-heading" className="sr-only">
+            Why Choose Costambar Tees
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-ocean-400 to-ocean-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+            <article className="text-center group">
+              <div 
+                className="w-20 h-20 bg-gradient-to-br from-ocean-400 to-ocean-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300"
+                aria-hidden="true"
+              >
                 <Palette className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-ocean-200 mb-2">
@@ -57,10 +68,13 @@ export default function HomePage() {
               <p className="text-ocean-100">
                 Original Costambar-inspired artwork you won&apos;t find anywhere else
               </p>
-            </div>
+            </article>
 
-            <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-coral-400 to-coral-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+            <article className="text-center group">
+              <div 
+                className="w-20 h-20 bg-gradient-to-br from-coral-400 to-coral-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300"
+                aria-hidden="true"
+              >
                 <Shirt className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-coral-200 mb-2">
@@ -69,10 +83,13 @@ export default function HomePage() {
               <p className="text-coral-100">
                 Soft, comfortable fabrics that feel as good as island breeze
               </p>
-            </div>
+            </article>
 
-            <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-palm-400 to-palm-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+            <article className="text-center group">
+              <div 
+                className="w-20 h-20 bg-gradient-to-br from-palm-400 to-palm-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300"
+                aria-hidden="true"
+              >
                 <Globe className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-palm-200 mb-2">
@@ -81,7 +98,7 @@ export default function HomePage() {
               <p className="text-palm-100">
                 Printed locally and shipped directly to your door
               </p>
-            </div>
+            </article>
           </div>
         </div>
       </section>

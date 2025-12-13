@@ -1,0 +1,9 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Block access to API routes (if any internal ones exist)
+Disallow: /api/webhooks/
+
+# Sitemap location
+Sitemap: https://caribbeantees.com/sitemap.xml
