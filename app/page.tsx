@@ -35,6 +35,7 @@ export default function HomePage() {
         style={{
           backgroundImage: "url('/wood-bg.png')",
           backgroundSize: 'contain',
+          boxShadow: 'inset 0 -15px 30px -10px rgba(0, 0, 0, 0.7)',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
