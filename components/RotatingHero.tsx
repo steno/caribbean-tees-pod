@@ -73,7 +73,7 @@ export function RotatingHero() {
 
 
   return (
-    <section className="sticky top-16 md:top-0 overflow-hidden -z-10 h-[calc(75vh-64px)] md:h-[calc(70vh-100px)]">
+    <section className="fixed top-0 left-0 right-0 w-full overflow-hidden -z-10 h-[75vh] md:h-[70vh]">
       {/* Placeholder Image - Shown while video loads */}
       <div
         className={`absolute inset-0 bg-cover bg-no-repeat bg-[center_top] md:bg-[center_calc(50%+20px)] transition-opacity duration-1000 ${

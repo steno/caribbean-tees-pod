@@ -14,9 +14,9 @@ export default function HomePage() {
     <div className="min-h-screen relative">
       {/* Hero Section - Rotating Background */}
       <RotatingHero />
-
-      {/* Products Section - Scrolls over hero */}
-      <section className="relative bg-white rounded-t-[2.5rem] md:rounded-t-[3.5rem] -mt-20 shadow-2xl">
+      
+      {/* Products Section - Starts below hero */}
+      <section className="relative bg-white rounded-t-[2.5rem] md:rounded-t-[3.5rem] mt-[calc(75vh-240px)] md:mt-[calc(70vh-240px)] shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           {/* Expandable About Section for SEO */}
