@@ -31,11 +31,10 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section 
-        className="relative py-16"
+        className="relative py-16 bg-repeat md:bg-repeat-x"
         style={{
           backgroundImage: "url('/wood-bg.png')",
           backgroundSize: 'contain',
-          backgroundRepeat: 'repeat-x',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
