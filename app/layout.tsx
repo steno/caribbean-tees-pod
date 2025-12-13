@@ -11,7 +11,7 @@ const anybody = Anybody({
   variable: '--font-anybody',
 })
 
-const siteUrl = 'https://caribbeantees.com' // Update with your actual domain
+const siteUrl = 'https://costambar-tees.netlify.app' // Update with your custom domain when ready
 const siteName = 'Costambar Tees'
 const siteDescription = 'Discover premium Caribbean-inspired t-shirts with unique Costambar designs. High-quality print-on-demand apparel featuring beach vibes and island style. Worldwide shipping available.'
 
@@ -75,10 +75,11 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: [
       {
-        url: '/CT-Logo-final.png',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Costambar Tees - Caribbean Inspired T-Shirts',
+        alt: 'Costambar Beach - Caribbean Paradise and T-Shirt Inspiration',
+        type: 'image/jpeg',
       },
     ],
   },
@@ -86,7 +87,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Costambar Tees - Beach Vibes & Island Style',
     description: siteDescription,
-    images: ['/CT-Logo-final.png'],
+    images: ['/og-image.jpg'],
     creator: '@costambartees', // Update with your actual Twitter handle
   },
   themeColor: '#0389b2',

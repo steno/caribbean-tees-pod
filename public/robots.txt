@@ -6,4 +6,4 @@ Allow: /
 Disallow: /api/webhooks/
 
 # Sitemap location
-Sitemap: https://caribbeantees.com/sitemap.xml
+Sitemap: https://costambar-tees.netlify.app/sitemap.xml
