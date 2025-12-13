@@ -5,6 +5,41 @@
 1. ✅ **Corrected Domain**: Changed from `caribbeantees.com` to `costambar-tees.netlify.app`
 2. ✅ **Optimized OG Image**: Created `og-image.jpg` (1200x630px) from beach photo
 3. ✅ **Proper Image Type**: Added MIME type `image/jpeg` for better compatibility
+4. ✅ **Added fb:app_id**: Placeholder added for Facebook App tracking
+
+## Facebook App ID (Optional but Recommended)
+
+The `fb:app_id` meta tag is currently set to a placeholder. To get your own Facebook App ID:
+
+### How to Create a Facebook App ID
+
+1. **Go to**: https://developers.facebook.com/apps/
+2. **Click**: "Create App"
+3. **Select**: "Business" or "Consumer" (choose Business for e-commerce)
+4. **Fill in**:
+   - App Name: "Costambar Tees"
+   - Contact Email: Your email
+5. **Click**: "Create App"
+6. **Copy your App ID** from the dashboard
+
+### Update Your App ID
+
+Once you have your Facebook App ID, update it in `app/layout.tsx`:
+
+```typescript
+other: {
+  'fb:app_id': 'YOUR_ACTUAL_APP_ID_HERE',
+},
+```
+
+### Why Use fb:app_id?
+
+- ✅ **Analytics**: Track social engagement through Facebook Analytics
+- ✅ **Moderation**: Manage comments if you use Facebook Comments
+- ✅ **Insights**: See how your content performs on Facebook
+- ✅ **App Events**: Track conversions from Facebook ads
+
+**Note**: Your site will work fine without it! The sharing preview works perfectly. This is only needed if you want Facebook analytics and insights.
 
 ## Clear Facebook's Cache
 

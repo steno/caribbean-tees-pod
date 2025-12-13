@@ -83,6 +83,9 @@ export const metadata: Metadata = {
       },
     ],
   },
+  other: {
+    'fb:app_id': '1234567890', // TODO: Replace with your actual Facebook App ID when created
+  },
   twitter: {
     card: 'summary_large_image',
     title: 'Costambar Tees - Beach Vibes & Island Style',
