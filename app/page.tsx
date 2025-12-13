@@ -2,7 +2,6 @@ import { Suspense } from 'react'
 import { ProductGrid } from '@/components/ProductGrid'
 import { ProductGridLoading } from '@/components/ProductGridLoading'
 import { ExpandableAbout } from '@/components/ExpandableAbout'
-import { AutoScroll } from '@/components/AutoScroll'
 import { RotatingHero } from '@/components/RotatingHero'
 import { Palette, Shirt, Globe } from 'lucide-react'
 
@@ -13,7 +12,6 @@ export const revalidate = 0
 export default function HomePage() {
   return (
     <div className="min-h-screen relative">
-      <AutoScroll />
       {/* Hero Section - Rotating Background */}
       <RotatingHero />
 
