@@ -29,7 +29,7 @@ export default function RootLayout({
           {children}
         </main>
         <CartSlideOver />
-        <footer className="bg-[#217ba1] text-white py-12 mt-20">
+        <footer className="bg-[#217ba1] text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-4">
               <Link href="/privacy" className="text-ocean-200 hover:text-white transition-colors text-sm">

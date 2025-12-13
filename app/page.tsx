@@ -30,7 +30,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="relative bg-gradient-to-br from-sand-100 to-coral-50 py-16">
+      <section className="relative bg-gray-200 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center group">

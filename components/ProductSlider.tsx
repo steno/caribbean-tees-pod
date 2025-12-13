@@ -124,10 +124,15 @@ export function ProductSlider({ products }: ProductSliderProps) {
         {currentProducts.length === 1 && itemsPerPage === 2 && (
           <div className="hidden lg:block bg-white rounded-xl shadow-md overflow-hidden opacity-60">
             {/* Placeholder Image */}
-            <div className="relative aspect-[4/3] bg-gray-300 overflow-hidden flex items-center justify-center">
-              <div className="text-center px-4">
-                <p className="text-gray-600 text-sm font-medium">More Coming Soon</p>
-              </div>
+            <div 
+              className="relative aspect-[4/3] overflow-hidden bg-cover bg-center bg-no-repeat flex items-center justify-center"
+              style={{
+                backgroundImage: "url('/tshirt-holder.png')",
+              }}
+            >
+              <p className="text-gray-800 text-lg font-semibold text-center px-4 drop-shadow-lg">
+                More tees coming soon
+              </p>
             </div>
             {/* Placeholder Content */}
             <div className="p-4">
