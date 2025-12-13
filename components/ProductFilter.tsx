@@ -14,37 +14,37 @@ interface ProductFilterProps {
 
 export function ProductFilter({ onFilterChange, activeFilter, onSortChange, activeSort }: ProductFilterProps) {
   return (
-    <div className="flex flex-col md:flex-row justify-center md:justify-between items-center mb-8 gap-3">
-      <div className="flex items-center gap-3">
+    <div className="flex flex-row justify-center md:justify-between items-center mb-8 gap-3 flex-wrap">
+      <div className="flex items-center gap-2">
         <button
           onClick={() => onFilterChange('all')}
-          className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+          className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
             activeFilter === 'all'
               ? 'bg-ocean-600 text-white shadow-lg'
               : 'bg-white text-gray-700 border-2 border-sand-200 hover:border-ocean-300 hover:bg-ocean-50'
           }`}
         >
-          All Products
+          All
         </button>
         <button
           onClick={() => onFilterChange('men')}
-          className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+          className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
             activeFilter === 'men'
               ? 'bg-ocean-600 text-white shadow-lg'
               : 'bg-white text-gray-700 border-2 border-sand-200 hover:border-ocean-300 hover:bg-ocean-50'
           }`}
         >
-          Men&apos;s
+          Men
         </button>
         <button
           onClick={() => onFilterChange('women')}
-          className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+          className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
             activeFilter === 'women'
               ? 'bg-ocean-600 text-white shadow-lg'
               : 'bg-white text-gray-700 border-2 border-sand-200 hover:border-ocean-300 hover:bg-ocean-50'
           }`}
         >
-          Women&apos;s
+          Women
         </button>
       </div>
       <div className="flex items-center gap-2">

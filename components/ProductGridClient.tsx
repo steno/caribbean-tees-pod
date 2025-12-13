@@ -171,6 +171,7 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
 export function ProductGridClient({ products }: ProductGridClientProps) {
   const [activeFilter, setActiveFilter] = useState<GenderFilter>('all')
   const [activeSort, setActiveSort] = useState<SortOption>('random')
+  const [randomSeed, setRandomSeed] = useState(0)
   
   // Helper function to get minimum price from variants
   const getMinPrice = (product: Product): number => {
@@ -178,6 +179,17 @@ export function ProductGridClient({ products }: ProductGridClientProps) {
     const availableVariants = product.variants.filter(v => v.is_available)
     if (availableVariants.length === 0) return 0
     return Math.min(...availableVariants.map(v => v.price))
+  }
+  
+  // Handlers that also trigger re-randomization
+  const handleFilterChange = (filter: GenderFilter) => {
+    setActiveFilter(filter)
+    setRandomSeed(prev => prev + 1) // Force re-randomization
+  }
+  
+  const handleSortChange = (sort: SortOption) => {
+    setActiveSort(sort)
+    setRandomSeed(prev => prev + 1) // Force re-randomization
   }
   
   // Filter and sort products
@@ -231,15 +243,15 @@ export function ProductGridClient({ products }: ProductGridClientProps) {
     }
     
     return sorted
-  }, [products, activeFilter, activeSort])
+  }, [products, activeFilter, activeSort, randomSeed])
   
   if (filteredAndSortedProducts.length === 0) {
     return (
       <>
         <ProductFilter 
-          onFilterChange={setActiveFilter} 
+          onFilterChange={handleFilterChange} 
           activeFilter={activeFilter}
-          onSortChange={setActiveSort}
+          onSortChange={handleSortChange}
           activeSort={activeSort}
         />
         <div className="text-center py-12">
@@ -255,9 +267,9 @@ export function ProductGridClient({ products }: ProductGridClientProps) {
   return (
     <>
       <ProductFilter 
-        onFilterChange={setActiveFilter} 
+        onFilterChange={handleFilterChange} 
         activeFilter={activeFilter}
-        onSortChange={setActiveSort}
+        onSortChange={handleSortChange}
         activeSort={activeSort}
       />
       <ProductSlider products={filteredAndSortedProducts} />

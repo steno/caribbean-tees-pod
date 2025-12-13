@@ -138,12 +138,14 @@ export function ProductSlider({ products }: ProductSliderProps) {
               >
                 <ChevronLeft className="w-16 h-16 stroke-[4]" style={{ color: '#217ba1' }} />
               </button>
-              {/* Mobile: Invisible tap zone on left edge */}
+              {/* Mobile: Simple chevron icon */}
               <button
                 onClick={goToPrevious}
-                className="lg:hidden absolute left-0 top-0 bottom-0 w-12 z-10"
+                className="lg:hidden flex absolute left-2 top-1/4 -translate-y-1/2 z-10 items-center justify-center active:opacity-70 transition-opacity"
                 aria-label="Previous products"
-              />
+              >
+                <ChevronLeft className="w-12 h-12 stroke-[3]" style={{ color: '#217ba1' }} />
+              </button>
             </>
           )}
           
@@ -158,12 +160,14 @@ export function ProductSlider({ products }: ProductSliderProps) {
               >
                 <ChevronRight className="w-16 h-16 stroke-[4]" style={{ color: '#217ba1' }} />
               </button>
-              {/* Mobile: Invisible tap zone on right edge */}
+              {/* Mobile: Simple chevron icon */}
               <button
                 onClick={goToNext}
-                className="lg:hidden absolute right-0 top-0 bottom-0 w-12 z-10"
+                className="lg:hidden flex absolute right-2 top-1/4 -translate-y-1/2 z-10 items-center justify-center active:opacity-70 transition-opacity"
                 aria-label="Next products"
-              />
+              >
+                <ChevronRight className="w-12 h-12 stroke-[3]" style={{ color: '#217ba1' }} />
+              </button>
             </>
           )}
         </>
