@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { ProductSlider } from './ProductSlider'
-import { ProductFilter, GenderFilter, SortOption } from './ProductFilter'
+import { ProductFilter, GenderFilter } from './ProductFilter'
 
 interface ProductVariant {
   id: string
@@ -22,7 +22,6 @@ interface Product {
   main_image_url: string | null
   variants: ProductVariant[]
   tags?: string[]
-  created_at?: string | null
   options?: Array<{
     name: string
     type: string
@@ -170,32 +169,10 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
 
 export function ProductGridClient({ products }: ProductGridClientProps) {
   const [activeFilter, setActiveFilter] = useState<GenderFilter>('all')
-  const [activeSort, setActiveSort] = useState<SortOption>('random')
-  const [randomSeed, setRandomSeed] = useState(0)
   
-  // Helper function to get minimum price from variants
-  const getMinPrice = (product: Product): number => {
-    if (!product.variants || product.variants.length === 0) return 0
-    const availableVariants = product.variants.filter(v => v.is_available)
-    if (availableVariants.length === 0) return 0
-    return Math.min(...availableVariants.map(v => v.price))
-  }
-  
-  // Handlers that also trigger re-randomization
-  const handleFilterChange = (filter: GenderFilter) => {
-    setActiveFilter(filter)
-    setRandomSeed(prev => prev + 1) // Force re-randomization
-  }
-  
-  const handleSortChange = (sort: SortOption) => {
-    setActiveSort(sort)
-    setRandomSeed(prev => prev + 1) // Force re-randomization
-  }
-  
-  // Filter and sort products
-  const filteredAndSortedProducts = useMemo(() => {
-    // First filter by gender
-    let filtered = products.filter(product => {
+  // Filter products based on selected gender
+  const filteredProducts = useMemo(() => {
+    const filtered = products.filter(product => {
       const matches = matchesGenderFilter(product, activeFilter)
       if (activeFilter !== 'all') {
         console.log(`Product: "${product.title}" | Filter: ${activeFilter} | Matches: ${matches}`)
@@ -203,57 +180,13 @@ export function ProductGridClient({ products }: ProductGridClientProps) {
       return matches
     })
     console.log(`Filter: ${activeFilter} | Total: ${products.length} | Filtered: ${filtered.length}`)
-    
-    // Then sort
-    let sorted: Product[]
-    if (activeSort === 'random') {
-      // Shuffle array randomly
-      sorted = [...filtered]
-      for (let i = sorted.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [sorted[i], sorted[j]] = [sorted[j], sorted[i]]
-      }
-    } else {
-      sorted = [...filtered].sort((a, b) => {
-        switch (activeSort) {
-          case 'price-low': {
-            const priceA = getMinPrice(a)
-            const priceB = getMinPrice(b)
-            return priceA - priceB
-          }
-          case 'price-high': {
-            const priceA = getMinPrice(a)
-            const priceB = getMinPrice(b)
-            return priceB - priceA
-          }
-          case 'newest': {
-            const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
-            const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
-            return dateB - dateA // Newest first (descending)
-          }
-          case 'oldest': {
-            const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
-            const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
-            return dateA - dateB // Oldest first (ascending)
-          }
-          default:
-            return 0
-        }
-      })
-    }
-    
-    return sorted
-  }, [products, activeFilter, activeSort, randomSeed])
+    return filtered
+  }, [products, activeFilter])
   
-  if (filteredAndSortedProducts.length === 0) {
+  if (filteredProducts.length === 0) {
     return (
       <>
-        <ProductFilter 
-          onFilterChange={handleFilterChange} 
-          activeFilter={activeFilter}
-          onSortChange={handleSortChange}
-          activeSort={activeSort}
-        />
+        <ProductFilter onFilterChange={setActiveFilter} activeFilter={activeFilter} />
         <div className="text-center py-12">
           <p className="text-gray-600">
             No {activeFilter !== 'all' ? `${activeFilter}'s` : ''} products found.
@@ -266,13 +199,8 @@ export function ProductGridClient({ products }: ProductGridClientProps) {
   
   return (
     <>
-      <ProductFilter 
-        onFilterChange={handleFilterChange} 
-        activeFilter={activeFilter}
-        onSortChange={handleSortChange}
-        activeSort={activeSort}
-      />
-      <ProductSlider products={filteredAndSortedProducts} />
+      <ProductFilter onFilterChange={setActiveFilter} activeFilter={activeFilter} />
+      <ProductSlider products={filteredProducts} />
     </>
   )
 }

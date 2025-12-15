@@ -280,14 +280,11 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasInitializedColor = useRef(false)
   
   // Set initial color after component mounts (client-side only) to avoid hydration errors
-  // Randomly select from available colors
+  // Prefer White, otherwise use first available color
   useEffect(() => {
     if (colors.length === 0 || hasInitializedColor.current) return
     
-    // Randomly select a color from available options
-    const randomIndex = Math.floor(Math.random() * colors.length)
-    const initialColor = colors[randomIndex]
-    
+    const initialColor = colors.find(color => color.toLowerCase() === 'white') || colors[0]
     if (initialColor) {
       setSelectedColor(initialColor)
       hasInitializedColor.current = true
@@ -346,15 +343,9 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div 
-      className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
-      style={{
-        paddingTop: '40px',
-        boxShadow: 'rgba(3, 137, 178, 0.3) 0px 0px 0px 3px'
-      }}
-    >
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
       {/* Product Image - Smaller and more compact */}
-      <div className="relative aspect-[4/3] bg-sand-100 overflow-hidden group">
+      <div className="relative aspect-[4/3] bg-sand-100 overflow-hidden">
         {displayImage ? (
           <>
             {imageLoading && (
@@ -367,7 +358,7 @@ export function ProductCard({ product }: ProductCardProps) {
               src={displayImage}
               alt={`${product.title} - ${selectedColor}`}
               fill
-              className={`object-cover scale-100 group-hover:scale-[1.5] transition-all duration-500 ${
+              className={`object-cover group-hover:scale-125 transition-all duration-500 ${
                 imageLoading ? 'opacity-0' : 'opacity-100'
               }`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
@@ -520,12 +511,12 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
         
-        {/* Color indicator overlay - Hidden per user request */}
-        {/* {selectedColor && (
+        {/* Color indicator overlay */}
+        {selectedColor && (
           <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-md">
             <span className="text-xs font-semibold text-gray-800">{selectedColor}</span>
           </div>
-        )} */}
+        )}
       </div>
 
       {/* Product Info */}
@@ -535,7 +526,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </h3>
 
         {/* Color Selection */}
-        {colors.length > 0 && (
+        {colors.length > 1 && (
           <div className="mb-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Color: <span className="font-semibold text-gray-900">{selectedColor}</span>
@@ -583,10 +574,10 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Size Selection */}
         <div className="mb-3">
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Size: <span className="font-semibold text-gray-900">{selectedSize}</span>
           </label>
-          <div className="flex flex-wrap gap-1.5 justify-center">
+          <div className="flex flex-wrap gap-2 justify-center">
             {sizes.map((size) => {
               const isAvailable = availableSizesForColor.includes(size)
               const isSelected = selectedSize === size
@@ -597,7 +588,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   onClick={() => setSelectedSize(size)}
                   disabled={!isAvailable}
                   className={`
-                    px-2.5 py-1.5 text-xs font-semibold rounded-lg border-2 transition-all min-w-[50px]
+                    px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all min-w-[60px]
                     ${
                       isSelected
                         ? 'border-coral-500 bg-coral-50 text-coral-900 ring-1 ring-coral-500'
@@ -639,7 +630,7 @@ export function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={!selectedVariant || isAdding}
             className={`
-              px-3 py-2 rounded-lg font-semibold transition-all flex items-center gap-1.5 text-sm
+              px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-1.5 text-sm
               ${
                 showSuccess
                   ? 'bg-green-500 text-white'
@@ -656,7 +647,7 @@ export function ProductCard({ product }: ProductCardProps) {
             ) : (
               <>
                 <ShoppingCart className="w-4 h-4" />
-                Add to Cart
+                Add
               </>
             )}
           </button>

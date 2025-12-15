@@ -151,7 +151,7 @@ export default function TermsOfService() {
           </p>
           <p className="mt-2">
             <strong>Costambar Tees</strong><br />
-            Email: <a href="mailto:stefan.asemota@gmail.com" className="text-ocean-600 hover:text-ocean-700 underline">stefan.asemota@gmail.com</a><br />
+            Email: <a href="mailto:kidliquid@gmail.com" className="text-ocean-600 hover:text-ocean-700 underline">kidliquid@gmail.com</a><br />
             Website: <Link href="/" className="text-ocean-600 hover:text-ocean-700 underline">costambar-tees.netlify.app</Link>
           </p>
         </section>
