@@ -640,7 +640,7 @@ export function ProductCard({ product }: ProductCardProps) {
             ) : (
               <>
                 <ShoppingCart className="w-4 h-4" />
-                Add
+                Add to Cart
               </>
             )}
           </button>
