@@ -510,13 +510,6 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
         </div>
-        
-        {/* Color indicator overlay */}
-        {selectedColor && (
-          <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-md">
-            <span className="text-xs font-semibold text-gray-800">{selectedColor}</span>
-          </div>
-        )}
       </div>
 
       {/* Product Info */}
@@ -526,7 +519,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </h3>
 
         {/* Color Selection */}
-        {colors.length > 1 && (
+        {colors.length > 0 && (
           <div className="mb-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Color: <span className="font-semibold text-gray-900">{selectedColor}</span>
