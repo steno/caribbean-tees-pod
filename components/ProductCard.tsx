@@ -343,9 +343,9 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
       {/* Product Image - Smaller and more compact */}
-      <div className="relative aspect-[4/3] bg-sand-100 overflow-hidden">
+      <div className="relative aspect-[4/3] bg-sand-100 overflow-hidden group">
         {displayImage ? (
           <>
             {imageLoading && (
@@ -358,7 +358,7 @@ export function ProductCard({ product }: ProductCardProps) {
               src={displayImage}
               alt={`${product.title} - ${selectedColor}`}
               fill
-              className={`object-cover group-hover:scale-125 transition-all duration-500 ${
+              className={`object-cover scale-100 group-hover:scale-[1.5] transition-all duration-500 ${
                 imageLoading ? 'opacity-0' : 'opacity-100'
               }`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
@@ -567,10 +567,10 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Size Selection */}
         <div className="mb-3">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
             Size: <span className="font-semibold text-gray-900">{selectedSize}</span>
           </label>
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex flex-wrap gap-1.5 justify-center">
             {sizes.map((size) => {
               const isAvailable = availableSizesForColor.includes(size)
               const isSelected = selectedSize === size
@@ -581,7 +581,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   onClick={() => setSelectedSize(size)}
                   disabled={!isAvailable}
                   className={`
-                    px-3 py-2 text-sm font-semibold rounded-lg border-2 transition-all min-w-[60px]
+                    px-2.5 py-1.5 text-xs font-semibold rounded-lg border-2 transition-all min-w-[50px]
                     ${
                       isSelected
                         ? 'border-coral-500 bg-coral-50 text-coral-900 ring-1 ring-coral-500'
@@ -623,7 +623,7 @@ export function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={!selectedVariant || isAdding}
             className={`
-              px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-1.5 text-sm
+              px-3 py-2 rounded-lg font-semibold transition-all flex items-center gap-1.5 text-sm
               ${
                 showSuccess
                   ? 'bg-green-500 text-white'

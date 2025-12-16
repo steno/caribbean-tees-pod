@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { ProductSlider } from './ProductSlider'
-import { ProductFilter, GenderFilter } from './ProductFilter'
+import { ProductFilter, GenderFilter, SortOption } from './ProductFilter'
 
 interface ProductVariant {
   id: string
@@ -22,6 +22,7 @@ interface Product {
   main_image_url: string | null
   variants: ProductVariant[]
   tags?: string[]
+  created_at?: string | null
   options?: Array<{
     name: string
     type: string
@@ -86,7 +87,7 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
     
     const hasWomenTag = tags.some(tag => {
       const lowerTag = tag.toLowerCase()
-      return lowerTag.startsWith('women') || 
+      return lowerTag === 'womens' ||
              lowerTag.startsWith('female') || 
              lowerTag.startsWith('woman') ||
              lowerTag === 'womens' ||
@@ -169,10 +170,38 @@ function matchesGenderFilter(product: Product, filter: GenderFilter): boolean {
 
 export function ProductGridClient({ products }: ProductGridClientProps) {
   const [activeFilter, setActiveFilter] = useState<GenderFilter>('all')
+  const [activeSort, setActiveSort] = useState<SortOption>('random')
+  const [randomSeed, setRandomSeed] = useState(0)
+  const [isClient, setIsClient] = useState(false)
   
-  // Filter products based on selected gender
-  const filteredProducts = useMemo(() => {
-    const filtered = products.filter(product => {
+  // Set client flag after mount to avoid hydration errors with random sorting
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+  
+  // Helper function to get minimum price from variants
+  const getMinPrice = (product: Product): number => {
+    if (!product.variants || product.variants.length === 0) return 0
+    const availableVariants = product.variants.filter(v => v.is_available)
+    if (availableVariants.length === 0) return 0
+    return Math.min(...availableVariants.map(v => v.price))
+  }
+  
+  // Handlers that also trigger re-randomization
+  const handleFilterChange = (filter: GenderFilter) => {
+    setActiveFilter(filter)
+    setRandomSeed(prev => prev + 1) // Force re-randomization
+  }
+  
+  const handleSortChange = (sort: SortOption) => {
+    setActiveSort(sort)
+    setRandomSeed(prev => prev + 1) // Force re-randomization
+  }
+  
+  // Filter and sort products
+  const filteredAndSortedProducts = useMemo(() => {
+    // First filter by gender
+    let filtered = products.filter(product => {
       const matches = matchesGenderFilter(product, activeFilter)
       if (activeFilter !== 'all') {
         console.log(`Product: "${product.title}" | Filter: ${activeFilter} | Matches: ${matches}`)
@@ -180,13 +209,63 @@ export function ProductGridClient({ products }: ProductGridClientProps) {
       return matches
     })
     console.log(`Filter: ${activeFilter} | Total: ${products.length} | Filtered: ${filtered.length}`)
-    return filtered
-  }, [products, activeFilter])
+    
+    // Then sort
+    let sorted: Product[]
+    if (activeSort === 'random') {
+      // Only shuffle on client to avoid hydration errors
+      if (isClient) {
+        // Shuffle array randomly
+        sorted = [...filtered]
+        for (let i = sorted.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [sorted[i], sorted[j]] = [sorted[j], sorted[i]]
+        }
+      } else {
+        // On server, just return filtered array as-is
+        sorted = filtered
+      }
+    } else {
+      sorted = [...filtered].sort((a, b) => {
+        switch (activeSort) {
+          case 'price-low': {
+            const priceA = getMinPrice(a)
+            const priceB = getMinPrice(b)
+            return priceA - priceB
+          }
+          case 'price-high': {
+            const priceA = getMinPrice(a)
+            const priceB = getMinPrice(b)
+            return priceB - priceA
+          }
+          case 'newest': {
+            const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+            const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+            return dateB - dateA // Newest first (descending)
+          }
+          case 'oldest': {
+            const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+            const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+            return dateA - dateB // Oldest first (ascending)
+          }
+          default:
+            return 0
+        }
+      })
+    }
+    
+    return sorted
+  }, [products, activeFilter, activeSort, randomSeed, isClient])
   
-  if (filteredProducts.length === 0) {
+  if (filteredAndSortedProducts.length === 0) {
     return (
       <>
-        <ProductFilter onFilterChange={setActiveFilter} activeFilter={activeFilter} />
+        <ProductFilter 
+          onFilterChange={handleFilterChange} 
+          activeFilter={activeFilter}
+          onSortChange={handleSortChange}
+          activeSort={activeSort}
+        />
         <div className="text-center py-12">
           <p className="text-gray-600">
             No {activeFilter !== 'all' ? `${activeFilter}'s` : ''} products found.
@@ -199,8 +278,13 @@ export function ProductGridClient({ products }: ProductGridClientProps) {
   
   return (
     <>
-      <ProductFilter onFilterChange={setActiveFilter} activeFilter={activeFilter} />
-      <ProductSlider products={filteredProducts} />
+      <ProductFilter 
+        onFilterChange={handleFilterChange} 
+        activeFilter={activeFilter}
+        onSortChange={handleSortChange}
+        activeSort={activeSort}
+      />
+      <ProductSlider products={filteredAndSortedProducts} />
     </>
   )
 }

@@ -23,18 +23,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        {/* Preload hero images for better performance */}
-        <link rel="preload" as="image" href="/home-photo.jpg" />
-        <link rel="preload" as="image" href="/home-photo2.jpg" />
-      </head>
+      <head></head>
       <body className={anybody.className}>
         <Header />
         <main className="min-h-screen" id="main-content">
           {children}
         </main>
         <CartSlideOver />
-        <footer className="bg-[#217ba1] text-white py-12 mt-20" role="contentinfo">
+        <footer className="bg-[#217ba1] text-white py-12" role="contentinfo">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-4">
               <Link href="/privacy" className="text-ocean-200 hover:text-white transition-colors text-sm">

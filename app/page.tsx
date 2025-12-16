@@ -1,5 +1,8 @@
+import { Suspense } from 'react'
 import { ProductGrid } from '@/components/ProductGrid'
+import { ProductGridLoading } from '@/components/ProductGridLoading'
 import { ExpandableAbout } from '@/components/ExpandableAbout'
+import { RotatingHero } from '@/components/RotatingHero'
 import { AutoScroll } from '@/components/AutoScroll'
 import { Palette, Shirt, Globe } from 'lucide-react'
 
@@ -11,21 +14,18 @@ export default function HomePage() {
   return (
     <div className="min-h-screen relative">
       <AutoScroll />
-      {/* Hero Section - Sticky Background */}
-      <section className="sticky top-16 md:top-0 overflow-hidden -z-10 h-[calc(75vh-64px)] md:h-[calc(70vh-100px)]">
-        {/* Background GIF - Scales responsively */}
-        <div 
-          className="absolute inset-0 bg-cover bg-no-repeat bg-[center_top] md:bg-[center_calc(50%+20px)]"
-          style={{
-            backgroundImage: "url('/home-photo.jpg')",
-          }}
-        />
-      </section>
-
-      {/* Products Section - Scrolls over hero */}
+      {/* Hero Section - Rotating Background */}
+      <RotatingHero />
+      
+      {/* Products Section - Starts below hero */}
       <section 
         aria-labelledby="products-heading"
-        className="relative bg-white rounded-t-[5.5rem] -mt-20 shadow-2xl"
+        className="relative bg-white rounded-t-[2.5rem] md:rounded-t-[3.5rem] mt-[calc(75vh-240px)] md:mt-[calc(70vh-240px)] shadow-2xl"
+        style={{
+          border: '10px solid rgba(255, 255, 255, 0.5)',
+          backgroundClip: 'padding-box',
+          WebkitBackgroundClip: 'padding-box',
+        }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h2 id="products-heading" className="sr-only">
@@ -36,14 +36,21 @@ export default function HomePage() {
             <ExpandableAbout />
           </div>
 
-          <ProductGrid />
+          <Suspense fallback={<ProductGridLoading />}>
+            <ProductGrid />
+          </Suspense>
         </div>
       </section>
 
       {/* Features Section */}
       <section 
         aria-labelledby="features-heading"
-        className="relative bg-gradient-to-br from-sand-100 to-coral-50 py-16"
+        className="relative py-16 bg-repeat md:bg-repeat-x"
+        style={{
+          backgroundImage: "url('/wood-bg.png')",
+          backgroundSize: 'contain',
+          boxShadow: 'inset 0 -15px 30px -10px rgba(0, 0, 0, 0.7)',
+        }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 id="features-heading" className="sr-only">
@@ -57,10 +64,10 @@ export default function HomePage() {
               >
                 <Palette className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-ocean-200 mb-2">
                 Unique Designs
               </h3>
-              <p className="text-gray-600">
+              <p className="text-ocean-100">
                 Original Costambar-inspired artwork you won&apos;t find anywhere else
               </p>
             </article>
@@ -72,10 +79,10 @@ export default function HomePage() {
               >
                 <Shirt className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-coral-200 mb-2">
                 Premium Quality
               </h3>
-              <p className="text-gray-600">
+              <p className="text-coral-100">
                 Soft, comfortable fabrics that feel as good as island breeze
               </p>
             </article>
@@ -87,10 +94,10 @@ export default function HomePage() {
               >
                 <Globe className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-palm-200 mb-2">
                 Worldwide Shipping
               </h3>
-              <p className="text-gray-600">
+              <p className="text-palm-100">
                 Printed locally and shipped directly to your door
               </p>
             </article>
