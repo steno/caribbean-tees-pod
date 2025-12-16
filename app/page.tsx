@@ -17,10 +17,10 @@ export default function HomePage() {
       {/* Hero Section - Rotating Background */}
       <RotatingHero />
       
-      {/* Products Section - Scrolls over hero */}
+      {/* Products Section - Starts below hero */}
       <section 
         aria-labelledby="products-heading"
-        className="relative bg-white rounded-t-[2.5rem] md:rounded-t-[3.5rem] mt-[50vh] md:mt-[45vh] shadow-2xl"
+        className="relative bg-white rounded-t-[2.5rem] md:rounded-t-[3.5rem] -mt-20 shadow-2xl"
         style={{
           border: '10px solid rgba(255, 255, 255, 0.5)',
           backgroundClip: 'padding-box',
