@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       line_items: lineItems,
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cart`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}`, // Return to homepage (cart is a modal, not a page)
       shipping_address_collection: {
         allowed_countries: ['US', 'CA', 'GB', 'AU', 'NZ', 'JM', 'BB', 'TT', 'BS', 'DO'], // Dominican Republic & Caribbean countries included!
       },
