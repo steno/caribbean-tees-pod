@@ -107,6 +107,29 @@ export async function POST(req: Request) {
       // CRITICAL: Submit order to Printify
       // ==========================================
 
+      // Check if we're in Stripe test mode
+      const isTestMode = process.env.STRIPE_SECRET_KEY?.startsWith('sk_test_')
+
+      if (isTestMode) {
+        console.log('🧪 TEST MODE: Skipping Printify order submission')
+        console.log('   • Order saved to Firestore for testing')
+        console.log('   • No real Printify order will be created')
+        console.log('   • Switch to live Stripe keys (sk_live_) for production')
+        
+        await orderRef.update({
+          status: 'test_order_not_submitted',
+          test_mode: true,
+          updated_at: new Date().toISOString(),
+        })
+
+        return NextResponse.json({ 
+          received: true, 
+          order_id: orderRef.id,
+          test_mode: true,
+          message: 'Test order - not submitted to Printify'
+        })
+      }
+
       // Split name into first and last
       const nameParts = (name || '').split(' ')
       const firstName = nameParts[0] || 'Customer'
